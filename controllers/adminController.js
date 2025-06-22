@@ -25,7 +25,7 @@ const getDashboardStats = async (req, res) => {
 
     // Revenus (simulation)
     const totalRevenue = await Payment.aggregate([
-      { $match: { statut: 'confirme' } },
+      { $match: { status: 'succès' } },
       { $group: { _id: null, total: { $sum: '$montant' } } }
     ]);
 
