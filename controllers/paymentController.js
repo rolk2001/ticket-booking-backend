@@ -194,7 +194,7 @@ exports.initiatePayment = async (req, res) => {
     };
 
     const notchPayHeaders = {
-      'Authorization': process.env.NOTCHPAY_PUBLIC_KEY,
+      'Authorization': process.env.NOTCHPAY_SECRET_KEY,
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     };
