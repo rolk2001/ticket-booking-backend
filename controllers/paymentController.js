@@ -13,6 +13,8 @@ exports.processPayment = async (req, res) => {
 };
 
 exports.handleNotchPayWebhook = async (req, res) => {
+  console.log('Webhook NotchPay reçu !', req.body);
+
   console.log('\n==============================');
   console.log('==> NOTCHPAY WEBHOOK APPELÉ <==');
   console.log('==============================\n');
