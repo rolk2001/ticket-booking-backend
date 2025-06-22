@@ -13,6 +13,11 @@ exports.processPayment = async (req, res) => {
 };
 
 exports.handleNotchPayWebhook = async (req, res) => {
+  console.log('\n--- WEBHOOK NOTCH PAY REÇU ---');
+  console.log('Timestamp:', new Date().toISOString());
+  console.log('Headers:', req.headers);
+  console.log('Body complet:', JSON.stringify(req.body, null, 2));
+
   const event = req.body;
   
   // TODO: Dans un environnement de production, il est CRUCIAL de vérifier
@@ -22,12 +27,22 @@ exports.handleNotchPayWebhook = async (req, res) => {
   //   return res.status(401).send('Signature invalide');
   // }
 
-  console.log('Webhook Notch Pay reçu:', event.type);
-
   if (event.type === 'payment.complete') {
     const transaction = event.data;
+    console.log('Événement "payment.complete" détecté.');
+    console.log('Données de transaction reçues:', JSON.stringify(transaction, null, 2));
+
+    // Hypothèse : la référence est dans `merchant_reference`.
+    const merchantReference = transaction.merchant_reference || transaction.reference;
+    if (!merchantReference) {
+      console.error('ERREUR: Impossible de trouver une référence de marchand (merchant_reference) dans le payload du webhook.');
+      return res.status(400).send('Référence de marchand manquante.');
+    }
+    console.log('Référence de marchand utilisée:', merchantReference);
+
     // Extraire l'ID de réservation de la référence (format: reservationId_timestamp)
-    const reservationId = transaction.reference.split('_')[0];
+    const reservationId = merchantReference.split('_')[0];
+    console.log(`ID de réservation extrait: ${reservationId}`);
 
     try {
       // On populate pour avoir les détails nécessaires pour le ticket
@@ -95,12 +110,15 @@ exports.handleNotchPayWebhook = async (req, res) => {
       console.log(`Webhook: Paiement confirmé et ticket créé pour la réservation ${reservationId}`);
       
     } catch (error) {
-      console.error(`Webhook: Erreur lors du traitement de la réservation ${reservationId}:`, error);
+      console.error(`Webhook: ERREUR lors du traitement de la réservation ${reservationId}:`, error);
       return res.status(500).send('Erreur interne du serveur.');
     }
+  } else {
+    console.log(`Événement de type "${event.type}" reçu et ignoré.`);
   }
 
   // Toujours répondre rapidement à Notch Pay avec un statut 200
+  console.log('Réponse au webhook: Statut 200 - OK');
   res.status(200).send('Webhook reçu avec succès.');
 };
 
