@@ -24,16 +24,13 @@ exports.handleNotchPayWebhook = async (req, res) => {
   console.log('Body complet:', JSON.stringify(req.body, null, 2));
 
   const event = req.body;
-  
-  // TODO: Dans un environnement de production, il est CRUCIAL de vérifier
-  // la signature du webhook pour s'assurer qu'il vient bien de Notch Pay.
-  // const signature = req.headers['x-notch-signature'];
-  // if (!isValidSignature(signature, req.body)) {
-  //   return res.status(401).send('Signature invalide');
-  // }
 
-  if (event.type === 'payment.complete') {
-    const transaction = event.data;
+  // NotchPay envoie le statut dans event.status ou event.data.status
+  const status = event.status || (event.data && event.data.status);
+
+  if (status === 'complete' || status === 'success') {
+    // Pour compatibilité, on récupère la transaction dans event ou event.data
+    const transaction = event.data || event;
     console.log('Événement "payment.complete" détecté.');
     console.log('Données de transaction reçues:', JSON.stringify(transaction, null, 2));
 
@@ -119,7 +116,7 @@ exports.handleNotchPayWebhook = async (req, res) => {
       return res.status(500).send('Erreur interne du serveur.');
     }
   } else {
-    console.log(`Événement de type "${event.type}" reçu et ignoré.`);
+    console.log(`Événement de statut "${status}" reçu et ignoré.`);
   }
 
   // Toujours répondre rapidement à Notch Pay avec un statut 200
