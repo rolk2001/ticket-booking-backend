@@ -30,13 +30,33 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
+  console.log('--- Tentative de connexion ---');
+  console.log('Body reçu:', req.body);
   try {
     const { email, mot_de_passe } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "Email ou mot de passe incorrect" });
+    
+    if (!email || !mot_de_passe) {
+      console.log('Validation échouée: email ou mot de passe manquant.');
+      return res.status(400).json({ message: 'Email et mot de passe sont requis.' });
+    }
 
+    console.log(`Recherche de l'utilisateur avec l'email: ${email}`);
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      console.log(`Utilisateur non trouvé pour l'email: ${email}`);
+      return res.status(400).json({ message: "Email ou mot de passe incorrect" });
+    }
+    console.log(`Utilisateur trouvé: ${user.nom}`);
+
+    console.log('Comparaison des mots de passe...');
     const isMatch = await bcrypt.compare(mot_de_passe, user.mot_de_passe);
-    if (!isMatch) return res.status(400).json({ message: "Email ou mot de passe incorrect" });
+
+    if (!isMatch) {
+      console.log('Le mot de passe ne correspond pas.');
+      return res.status(400).json({ message: "Email ou mot de passe incorrect" });
+    }
+    console.log('Le mot de passe correspond. Connexion réussie.');
 
     // Générer le token JWT
     const token = jwt.sign(
@@ -47,6 +67,7 @@ exports.login = async (req, res) => {
 
     res.json({ token, user: { id: user._id, nom: user.nom, email: user.email, type: user.type, telephone: user.telephone } });
   } catch (error) {
+    console.error('Erreur inattendue dans la fonction login:', error);
     res.status(500).json({ message: error.message });
   }
 };
