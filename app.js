@@ -21,7 +21,7 @@ const corsOptions = {
 };
 
 // Middlewares
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 // Exemple de route test
