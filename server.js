@@ -8,6 +8,6 @@ const PORT = process.env.PORT || 5000;
 // Connexion à la base de données puis démarrage du serveur
 connectDB().then(() => {
   app.listen(PORT, () => {
-    console.log(`🚀 Serveur lancé sur http://localhost:${PORT}`);
+    console.log(`🚀 Serveur prêt et à l'écoute sur le port ${PORT}`);
   });
 });
