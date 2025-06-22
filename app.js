@@ -5,8 +5,20 @@ require('dotenv').config();
 
 const app = express();
 
+// Configuration CORS
+const corsOptions = {
+  origin: [
+    'http://localhost:8100', // Pour le développement local Ionic
+    'http://localhost',      // Pour les applications web locales
+    // Ajoutez ici l'URL de votre frontend déployé plus tard
+  ],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204
+};
+
 // Middlewares
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Exemple de route test
