@@ -44,6 +44,9 @@ app.use('/api/reservations', reservationRoutes);
 const paymentRoutes = require('./routes/payment');
 app.use('/api/payments', paymentRoutes);
 
+const ticketRoutes = require('./routes/ticket');
+app.use('/api/tickets', ticketRoutes);
+
 // Routes Admin
 const adminRoutes = require('./routes/admin');
 app.use('/api/admin', adminRoutes);
