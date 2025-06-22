@@ -13,6 +13,9 @@ exports.processPayment = async (req, res) => {
 };
 
 exports.handleNotchPayWebhook = async (req, res) => {
+  console.log('\n==============================');
+  console.log('==> NOTCHPAY WEBHOOK APPELÉ <==');
+  console.log('==============================\n');
   console.log('\n--- WEBHOOK NOTCH PAY REÇU ---');
   console.log('Timestamp:', new Date().toISOString());
   console.log('Headers:', req.headers);
