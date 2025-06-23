@@ -357,6 +357,45 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+const updateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nom, email, telephone, type } = req.body;
+
+    // On ne met à jour que les champs fournis
+    const updateData = { nom, email, telephone, type };
+
+    const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true }).select('-mot_de_passe');
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    }
+    res.json(updatedUser);
+  } catch (error) {
+    console.error('Erreur updateUser:', error);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Sécurité : un admin ne peut pas se supprimer lui-même
+    if (req.user.userId === id) {
+      return res.status(400).json({ message: 'Un administrateur ne peut pas se supprimer lui-même.' });
+    }
+
+    const deletedUser = await User.findByIdAndDelete(id);
+    if (!deletedUser) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    }
+    res.json({ message: 'Utilisateur supprimé avec succès' });
+  } catch (error) {
+    console.error('Erreur deleteUser:', error);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+};
+
 module.exports = {
   getDashboardStats,
   getAllBuses,
@@ -375,5 +414,7 @@ module.exports = {
   updateReservationStatus,
   getAllPayments,
   getAllTickets,
-  getAllUsers
+  getAllUsers,
+  updateUser,
+  deleteUser
 }; 
