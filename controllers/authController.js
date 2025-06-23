@@ -1,7 +1,9 @@
 // controllers/authController.js
 const User = require('../models/User');
+const EmailVerification = require('../models/EmailVerification');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const sendOtpMail = require('../utils/sendOtpMail');
 
 exports.register = async (req, res) => {
   try {
@@ -100,4 +102,43 @@ exports.updateProfile = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Erreur lors de la mise à jour du profil', error: error.message });
   }
+};
+
+exports.requestSignupOtp = async (req, res) => {
+  const { email } = req.body;
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+
+  await EmailVerification.findOneAndUpdate(
+    { email },
+    { otp, expiresAt },
+    { upsert: true, new: true }
+  );
+
+  await sendOtpMail(email, otp);
+
+  res.json({ message: "Code envoyé à votre e-mail." });
+};
+
+exports.verifyOtpAndRegister = async (req, res) => {
+  const { email, otp, nom, mot_de_passe, telephone } = req.body;
+  const record = await EmailVerification.findOne({ email });
+
+  if (!record || record.otp !== otp || record.expiresAt < new Date()) {
+    return res.status(400).json({ message: "Code invalide ou expiré." });
+  }
+
+  // Vérifie si l'utilisateur existe déjà
+  const userExists = await User.findOne({ email });
+  if (userExists) return res.status(400).json({ message: "Email déjà utilisé" });
+
+  // Crée l'utilisateur
+  const hashedPassword = await bcrypt.hash(mot_de_passe, 10);
+  const user = new User({ email, nom, mot_de_passe: hashedPassword, telephone });
+  await user.save();
+
+  // Supprime l'OTP utilisé
+  await EmailVerification.deleteOne({ email });
+
+  res.json({ message: "Inscription réussie !" });
 };
