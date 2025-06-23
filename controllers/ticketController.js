@@ -39,13 +39,16 @@ exports.getTicketByReservationId = async (req, res) => {
   }
 };
 
-// Ajoute cette fonction pour la route GET /:scheduleId/seats
+// GET /:scheduleId/seats
 exports.getReservedSeats = async (req, res) => {
   try {
     const { scheduleId } = req.params;
-    // On suppose que le champ "schedule" dans Ticket référence l'horaire
+    // Attention au nom du champ : c'est "schedule" ou "schedule_id" selon ton modèle Ticket
     const tickets = await Ticket.find({ schedule: scheduleId });
-    const reservedSeats = tickets.map(t => t.seat);
+    // Ne retourne que les sièges effectivement réservés (numéros valides)
+    const reservedSeats = tickets
+      .map(t => t.seat)
+      .filter(seat => seat && seat !== 'Non assigné');
     res.json(reservedSeats);
   } catch (err) {
     res.status(500).json({ message: 'Erreur lors de la récupération des sièges réservés.' });
