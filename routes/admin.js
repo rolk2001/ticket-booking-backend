@@ -39,5 +39,7 @@ router.get('/tickets', adminController.getAllTickets);
 
 // Gestion des utilisateurs
 router.get('/users', adminController.getAllUsers);
+router.put('/users/:id', adminController.updateUser);
+router.delete('/users/:id', adminController.deleteUser);
 
 module.exports = router; 
