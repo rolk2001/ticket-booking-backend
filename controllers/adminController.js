@@ -294,6 +294,36 @@ const updateReservationStatus = async (req, res) => {
   }
 };
 
+// ===== GESTION DES PAIEMENTS =====
+const getAllPayments = async (req, res) => {
+  try {
+    const payments = await Payment.find({ status: 'succès' })
+      .populate({
+        path: 'reservation_id',
+        populate: [
+          {
+            path: 'user',
+            select: 'nom email telephone'
+          },
+          {
+            path: 'schedule',
+            populate: [
+              { path: 'bus', select: 'numero compagnie' },
+              { path: 'terminal_depart', select: 'nom ville' },
+              { path: 'terminal_arrivee', select: 'nom ville' }
+            ]
+          }
+        ]
+      })
+      .sort({ createdAt: -1 });
+
+    res.json(payments);
+  } catch (error) {
+    console.error('Erreur getAllPayments:', error);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+};
+
 // ===== GESTION DES TICKETS =====
 const getAllTickets = async (req, res) => {
   try {
@@ -343,6 +373,7 @@ module.exports = {
   deleteSchedule,
   getAllReservations,
   updateReservationStatus,
+  getAllPayments,
   getAllTickets,
   getAllUsers
 }; 
