@@ -71,3 +71,23 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.updateProfile = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { nom, email, telephone, photo } = req.body;
+    const updateData = {};
+    if (nom) updateData.nom = nom;
+    if (email) updateData.email = email;
+    if (telephone) updateData.telephone = telephone;
+    if (photo) updateData.photo = photo;
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true }).select('-mot_de_passe');
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    }
+    res.json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur lors de la mise à jour du profil', error: error.message });
+  }
+};
