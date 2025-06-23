@@ -6,7 +6,7 @@ const Ticket = require('../models/Ticket');
 // Créer une réservation
 exports.creerReservation = async (req, res) => {
   try {
-    const { schedule: scheduleId, nombre_places } = req.body;
+    const { schedule: scheduleId, nombre_places, seat } = req.body;
     const userId = req.user.userId;
 
     const schedule = await Schedule.findById(scheduleId);
@@ -18,6 +18,7 @@ exports.creerReservation = async (req, res) => {
       return res.status(400).json({ message: "Pas assez de places disponibles" });
     }
 
+    // Créer la réservation
     const reservation = new Reservation({ 
       user: userId, 
       schedule: scheduleId, 
@@ -25,10 +26,19 @@ exports.creerReservation = async (req, res) => {
     });
     await reservation.save();
 
+    // Créer le ticket avec le siège choisi
+    const ticket = new Ticket({
+      reservation_id: reservation._id,
+      user_id: userId,
+      schedule: scheduleId,
+      seat: seat || 'Non assigné'
+    });
+    await ticket.save();
+
     schedule.places_disponibles -= nombre_places;
     await schedule.save();
 
-    res.status(201).json({ message: "Réservation créée avec succès", reservation });
+    res.status(201).json({ message: "Réservation créée avec succès", reservation, ticket });
   } catch (error) {
     res.status(500).json({ message: "Erreur lors de la création de la réservation.", error: error.message });
   }
