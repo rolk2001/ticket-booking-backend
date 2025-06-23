@@ -2,6 +2,7 @@
 const Reservation = require('../models/Reservation');
 const Schedule = require('../models/Schedule');
 const Ticket = require('../models/Ticket');
+const QRCode = require('qrcode');
 
 // Créer une réservation
 exports.creerReservation = async (req, res) => {
@@ -9,7 +10,8 @@ exports.creerReservation = async (req, res) => {
     const { schedule: scheduleId, nombre_places, seat } = req.body;
     const userId = req.user.userId;
 
-    const schedule = await Schedule.findById(scheduleId);
+    // On veut le bus pour le nom de compagnie
+    const schedule = await Schedule.findById(scheduleId).populate('bus');
     if (!schedule) {
       return res.status(404).json({ message: "Horaire non trouvé" });
     }
@@ -26,12 +28,18 @@ exports.creerReservation = async (req, res) => {
     });
     await reservation.save();
 
-    // Créer le ticket avec le siège choisi
+    // Générer le QR code avec le nom de la compagnie
+    const compagnie = schedule.bus?.compagnie || 'COMPAGNIE';
+    const qrText = `${compagnie}.cm`;
+    const qr_code = await QRCode.toDataURL(qrText);
+
+    // Créer le ticket avec le QR code
     const ticket = new Ticket({
       reservation_id: reservation._id,
       user_id: userId,
       schedule: scheduleId,
-      seat: seat || 'Non assigné'
+      seat: seat || 'Non assigné',
+      qr_code
     });
     await ticket.save();
 
