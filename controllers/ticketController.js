@@ -37,4 +37,17 @@ exports.getTicketByReservationId = async (req, res) => {
     console.error('Erreur lors de la récupération du ticket:', error);
     res.status(500).json({ message: 'Erreur serveur.' });
   }
-}; 
+};
+
+// Ajoute cette fonction pour la route GET /:scheduleId/seats
+exports.getReservedSeats = async (req, res) => {
+  try {
+    const { scheduleId } = req.params;
+    // On suppose que le champ "schedule" dans Ticket référence l'horaire
+    const tickets = await Ticket.find({ schedule: scheduleId });
+    const reservedSeats = tickets.map(t => t.seat);
+    res.json(reservedSeats);
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur lors de la récupération des sièges réservés.' });
+  }
+};
