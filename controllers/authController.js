@@ -1,9 +1,9 @@
 // controllers/authController.js
 const User = require('../models/User');
 const EmailVerification = require('../models/EmailVerification');
+const sendOtpMail = require('../utils/sendOtpMail');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const sendOtpMail = require('../utils/sendOtpMail');
 
 exports.register = async (req, res) => {
   try {
@@ -104,6 +104,7 @@ exports.updateProfile = async (req, res) => {
   }
 };
 
+// 1. Demande OTP
 exports.requestSignupOtp = async (req, res) => {
   const { email } = req.body;
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -120,6 +121,7 @@ exports.requestSignupOtp = async (req, res) => {
   res.json({ message: "Code envoyé à votre e-mail." });
 };
 
+// 2. Vérifie OTP et crée le compte
 exports.verifyOtpAndRegister = async (req, res) => {
   const { email, otp, nom, mot_de_passe, telephone } = req.body;
   const record = await EmailVerification.findOne({ email });
