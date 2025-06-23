@@ -31,6 +31,9 @@ router.delete('/schedules/:id', adminController.deleteSchedule);
 router.get('/reservations', adminController.getAllReservations);
 router.put('/reservations/:id/status', adminController.updateReservationStatus);
 
+// Gestion des paiements
+router.get('/payments', adminController.getAllPayments);
+
 // Gestion des tickets
 router.get('/tickets', adminController.getAllTickets);
 
