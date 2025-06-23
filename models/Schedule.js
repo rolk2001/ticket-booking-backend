@@ -9,7 +9,8 @@ const scheduleSchema = new mongoose.Schema({
   date_arrivee: { type: Date, required: true },
   prix: { type: Number, required: true },
   places_disponibles: { type: Number, required: true },
-  status: { type: String, enum: ['programmé', 'parti', 'arrivé', 'annulé'], default: 'programmé' }
+  status: { type: String, enum: ['programmé', 'parti', 'arrivé', 'annulé'], default: 'programmé' },
+  seat_map: [{ number: String }] 
 }, { timestamps: true });
 
 module.exports = mongoose.model('Schedule', scheduleSchema);
