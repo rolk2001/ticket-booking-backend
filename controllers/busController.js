@@ -4,8 +4,11 @@ const Bus = require('../models/Bus');
 // Ajouter un bus
 exports.ajouterBus = async (req, res) => {
   try {
-    const { matricule, capacite, status, nomAgence } = req.body;
-    const bus = new Bus({ matricule, capacite, status, nomAgence });
+    const { numero, capacite, compagnie, type_bus, status } = req.body;
+    if (!numero || !capacite || !compagnie || !type_bus) {
+      return res.status(400).json({ message: "Tous les champs obligatoires doivent être remplis." });
+    }
+    const bus = new Bus({ numero, capacite, compagnie, type_bus, status });
     await bus.save();
     res.status(201).json({ message: "Bus ajouté avec succès", bus });
   } catch (error) {
