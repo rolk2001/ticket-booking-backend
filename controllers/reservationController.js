@@ -1,6 +1,7 @@
 // controllers/reservationController.js
 const Reservation = require('../models/Reservation');
 const Schedule = require('../models/Schedule');
+const Ticket = require('../models/Ticket');
 
 // Créer une réservation
 exports.creerReservation = async (req, res) => {
@@ -52,4 +53,12 @@ exports.mesReservations = async (req, res) => {
     console.error("Erreur dans mesReservations:", error);
     res.status(500).json({ message: "Erreur lors de la récupération de vos réservations.", error: error.message });
   }
+};
+
+// Obtenir les sièges réservés pour un horaire donné
+exports.getReservedSeats = async (req, res) => {
+  const { scheduleId } = req.params;
+  const tickets = await Ticket.find({ schedule_id: scheduleId });
+  const reservedSeats = tickets.map(t => t.seat);
+  res.json(reservedSeats);
 };
