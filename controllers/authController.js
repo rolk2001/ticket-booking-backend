@@ -65,7 +65,17 @@ exports.login = async (req, res) => {
       { expiresIn: '7d' }
     );
 
-    res.json({ token, user: { id: user._id, nom: user.nom, email: user.email, type: user.type, telephone: user.telephone } });
+    res.json({ 
+      token, 
+      user: { 
+        id: user._id, 
+        nom: user.nom, 
+        email: user.email, 
+        type: user.type, 
+        telephone: user.telephone,
+        photo: user.photo 
+      } 
+    });
   } catch (error) {
     console.error('Erreur inattendue dans la fonction login:', error);
     res.status(500).json({ message: error.message });
