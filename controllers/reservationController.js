@@ -67,8 +67,14 @@ exports.mesReservations = async (req, res) => {
 
 // Obtenir les sièges réservés pour un horaire donné
 exports.getReservedSeats = async (req, res) => {
-  const { scheduleId } = req.params;
-  const tickets = await Ticket.find({ schedule_id: scheduleId });
-  const reservedSeats = tickets.map(t => t.seat);
-  res.json(reservedSeats);
+  try {
+    const { scheduleId } = req.params;
+    const tickets = await Ticket.find({ schedule: scheduleId });
+    const reservedSeats = tickets
+      .map(t => t.seat)
+      .filter(seat => seat && seat !== 'Non assigné');
+    res.json(reservedSeats);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur lors de la récupération des sièges réservés.", error: error.message });
+  }
 };
