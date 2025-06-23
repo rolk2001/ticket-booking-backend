@@ -12,5 +12,7 @@ router.post('/login', authController.login);
 
 // Route modification du profil utilisateur connecté
 router.put('/profile', authMiddleware, authController.updateProfile);
+router.post('/request-signup-otp', authController.requestSignupOtp);
+router.post('/verify-otp-register', authController.verifyOtpAndRegister);
 
 module.exports = router;
