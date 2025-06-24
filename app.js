@@ -53,6 +53,10 @@ app.use('/api/tickets', ticketRoutes);
 // Routes Admin
 const adminRoutes = require('./routes/admin');
 app.use('/api/admin', adminRoutes);
+
+const userRoutes = require('./routes/user');
+app.use('/api/user', userRoutes);
+
 // ... (module.exports = app;)
 
 module.exports = app;
