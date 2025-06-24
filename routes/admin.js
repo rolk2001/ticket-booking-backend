@@ -42,4 +42,10 @@ router.get('/users', adminController.getAllUsers);
 router.put('/users/:id', adminController.updateUser);
 router.delete('/users/:id', adminController.deleteUser);
 
+// Gestion des messages
+router.post('/messages', adminController.sendMessage); // Envoi d'un message
+router.get('/messages', adminController.getAllMessages); // Liste pour admin
+router.get('/messages/user/:userId', adminController.getUserMessages); // Liste pour un utilisateur
+router.put('/messages/:id/read', adminController.markAsRead); // Marquer comme lu
+
 module.exports = router;
