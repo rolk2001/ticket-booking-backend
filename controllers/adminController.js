@@ -398,7 +398,7 @@ const deleteUser = async (req, res) => {
   }
 };
 
-exports.sendMessage = async (req, res) => {
+const sendMessage = async (req, res) => {
   try {
     const { to, subject, body } = req.body;
     const message = new Message({ to, subject, body });
@@ -416,18 +416,18 @@ exports.sendMessage = async (req, res) => {
   }
 };
 
-exports.getAllMessages = async (req, res) => {
+const getAllMessages = async (req, res) => {
   const messages = await Message.find().populate('to', 'nom email').sort({ sentAt: -1 });
   res.json(messages);
 };
 
-exports.getUserMessages = async (req, res) => {
+const getUserMessages = async (req, res) => {
   const { userId } = req.params;
   const messages = await Message.find({ to: userId }).sort({ sentAt: -1 });
   res.json(messages);
 };
 
-exports.markAsRead = async (req, res) => {
+const markAsRead = async (req, res) => {
   const { id } = req.params;
   const { userId } = req.body;
   await Message.findByIdAndUpdate(id, { $addToSet: { readBy: userId } });
@@ -454,5 +454,9 @@ module.exports = {
   getAllTickets,
   getAllUsers,
   updateUser,
-  deleteUser
+  deleteUser,
+  sendMessage,
+  getAllMessages,
+  getUserMessages,
+  markAsRead
 };
