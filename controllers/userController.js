@@ -1,4 +1,5 @@
 const Message = require('../models/Message');
+const User = require('../models/User');
 
 // Récupérer les messages de l'utilisateur connecté
 exports.getMyMessages = async (req, res) => {
@@ -32,5 +33,26 @@ exports.deleteMyMessage = async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ message: "Erreur lors de la suppression du message." });
+  }
+};
+
+exports.replyToAdmin = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { subject, body } = req.body;
+    // Récupérer tous les admins
+    const admins = await User.find({ role: 'admin' });
+    const adminIds = admins.map(a => a._id);
+
+    const message = new Message({
+      to: adminIds,
+      from: userId,
+      subject,
+      body
+    });
+    await message.save();
+    res.json({ success: true, message });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur lors de l'envoi du message à l'admin." });
   }
 }; 
