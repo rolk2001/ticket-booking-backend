@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const messageSchema = new mongoose.Schema({
   to: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // destinataires
+  from: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Ajouté
   subject: { type: String, required: true },
   body: { type: String, required: true },
   sentAt: { type: Date, default: Date.now },
