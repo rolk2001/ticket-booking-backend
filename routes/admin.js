@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/adminController');
 const adminMiddleware = require('../middlewares/adminMiddleware');
+const authMiddleware = require('../middlewares/authMiddleware');
 
 // Appliquer le middleware admin à toutes les routes
 router.use(adminMiddleware);
@@ -47,5 +48,6 @@ router.post('/messages', adminController.sendMessage); // Envoi d'un message
 router.get('/messages', adminController.getAllMessages); // Liste pour admin
 router.get('/messages/user/:userId', adminController.getUserMessages); // Liste pour un utilisateur
 router.put('/messages/:id/read', adminController.markAsRead); // Marquer comme lu
+router.get('/messages/inbox', authMiddleware, adminMiddleware, adminController.getInbox);
 
 module.exports = router;
