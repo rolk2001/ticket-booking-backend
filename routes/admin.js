@@ -33,6 +33,7 @@ router.put('/reservations/:id/status', adminController.updateReservationStatus);
 
 // Gestion des paiements
 router.get('/payments', adminController.getAllPayments);
+router.delete('/payments/:id', adminController.deletePayment); // AJOUTE CETTE LIGNE
 
 // Gestion des tickets
 router.get('/tickets', adminController.getAllTickets);
@@ -42,4 +43,4 @@ router.get('/users', adminController.getAllUsers);
 router.put('/users/:id', adminController.updateUser);
 router.delete('/users/:id', adminController.deleteUser);
 
-module.exports = router; 
+module.exports = router;
