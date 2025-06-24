@@ -8,5 +8,6 @@ router.get('/messages', authMiddleware, userController.getMyMessages);
 
 router.delete('/messages/:id', authMiddleware, userController.deleteMyMessage);
 
+router.post('/messages/reply', authMiddleware, userController.replyToAdmin);
 
 module.exports = router; 
