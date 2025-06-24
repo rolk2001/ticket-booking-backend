@@ -108,7 +108,7 @@ exports.updateProfile = async (req, res) => {
 exports.requestSignupOtp = async (req, res) => {
   const { email } = req.body;
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+  const expiresAt = new Date(Date.now() + 5 * 60 * 1000); 
 
   await EmailVerification.findOneAndUpdate(
     { email },
