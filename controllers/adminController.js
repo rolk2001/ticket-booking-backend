@@ -396,6 +396,21 @@ const deleteUser = async (req, res) => {
   }
 };
 
+// Suppression d'un paiement
+const deletePayment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const payment = await Payment.findByIdAndDelete(id);
+    if (!payment) {
+      return res.status(404).json({ message: 'Paiement non trouvé' });
+    }
+    res.json({ message: 'Paiement supprimé avec succès' });
+  } catch (error) {
+    console.error('Erreur deletePayment:', error);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+};
+
 module.exports = {
   getDashboardStats,
   getAllBuses,
@@ -416,5 +431,6 @@ module.exports = {
   getAllTickets,
   getAllUsers,
   updateUser,
-  deleteUser
-}; 
+  deleteUser,
+  deletePayment
+};
