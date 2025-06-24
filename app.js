@@ -5,15 +5,13 @@ require('dotenv').config();
 
 const app = express();
 
-// Configuration CORS
+// Configuration CORS propre
 const corsOptions = {
   origin: [
     'http://localhost:8100', // Pour le développement local Ionic
     'http://localhost',      // Pour les applications web locales
-    'https://ticket-booking-backend-63wm.onrender.com', // Backend Render (pour les webhooks)
     // Ajoute ici l'URL de ton frontend déployé si besoin, ex:
     // 'https://ton-frontend.onrender.com'
-    '*', // (optionnel, pour tout autoriser temporairement)
   ],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
