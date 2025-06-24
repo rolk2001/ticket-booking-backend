@@ -454,6 +454,5 @@ module.exports = {
   getAllTickets,
   getAllUsers,
   updateUser,
-  deleteUser,
-  deletePayment
+  deleteUser
 };
