@@ -5,6 +5,8 @@ const Reservation = require('../models/Reservation');
 const Ticket = require('../models/Ticket');
 const Payment = require('../models/Payment');
 const User = require('../models/User');
+const Message = require('../models/Message');
+const sendOtpMail = require('../utils/sendOtpMail'); // réutilise ton utilitaire mail
 
 // ===== DASHBOARD STATISTIQUES =====
 const getDashboardStats = async (req, res) => {
@@ -396,6 +398,41 @@ const deleteUser = async (req, res) => {
   }
 };
 
+exports.sendMessage = async (req, res) => {
+  try {
+    const { to, subject, body } = req.body;
+    const message = new Message({ to, subject, body });
+    await message.save();
+
+    // Envoi d'e-mail à chaque destinataire
+    const users = await User.find({ _id: { $in: to } });
+    for (const user of users) {
+      await sendOtpMail(user.email, `${subject}\n\n${body}`);
+    }
+
+    res.status(201).json({ message: 'Message envoyé et enregistré.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur lors de l\'envoi du message.' });
+  }
+};
+
+exports.getAllMessages = async (req, res) => {
+  const messages = await Message.find().populate('to', 'nom email').sort({ sentAt: -1 });
+  res.json(messages);
+};
+
+exports.getUserMessages = async (req, res) => {
+  const { userId } = req.params;
+  const messages = await Message.find({ to: userId }).sort({ sentAt: -1 });
+  res.json(messages);
+};
+
+exports.markAsRead = async (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.body;
+  await Message.findByIdAndUpdate(id, { $addToSet: { readBy: userId } });
+  res.json({ message: 'Message marqué comme lu.' });
+};
 
 module.exports = {
   getDashboardStats,
