@@ -6,7 +6,7 @@ const userController = require('../controllers/userController');
 // Protéger la route avec le middleware d'authentification
 router.get('/messages', authMiddleware, userController.getMyMessages);
 
-router.delete('/messages/:id', authMiddleware, userController.deleteMessage);
+router.delete('/messages/:id', authMiddleware, userController.deleteMyMessage);
 
 
 module.exports = router; 
