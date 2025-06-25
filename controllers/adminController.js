@@ -446,6 +446,21 @@ const getInbox = async (req, res) => {
   }
 };
 
+// ===== GESTION DES MESSAGES (SUPPRESSION) =====
+const deleteMessage = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const message = await Message.findByIdAndDelete(id);
+    if (!message) {
+      return res.status(404).json({ message: 'Message non trouvé' });
+    }
+    res.json({ message: 'Message supprimé avec succès' });
+  } catch (error) {
+    console.error('Erreur deleteMessage:', error);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+};
+
 module.exports = {
   getDashboardStats,
   getAllBuses,
@@ -471,5 +486,6 @@ module.exports = {
   getAllMessages,
   getUserMessages,
   markAsRead,
-  getInbox
+  getInbox,
+  deleteMessage
 };
