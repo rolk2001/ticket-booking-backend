@@ -41,7 +41,7 @@ exports.replyToAdmin = async (req, res) => {
     const userId = req.user.userId;
     const { subject, body } = req.body;
     // Récupérer tous les admins
-    const admins = await User.find({ role: 'admin' });
+    const admins = await User.find({ type: 'admin' });
     const adminIds = admins.map(a => a._id);
 
     const message = new Message({
