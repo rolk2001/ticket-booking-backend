@@ -436,7 +436,7 @@ const markAsRead = async (req, res) => {
 
 const getInbox = async (req, res) => {
   try {
-    const adminId = req.user.userId;
+    const adminId = req.user._id;
     const messages = await Message.find({ to: { $in: [adminId] }, from: { $ne: null } })
       .sort({ sentAt: -1 })
       .populate('from', 'nom email');
