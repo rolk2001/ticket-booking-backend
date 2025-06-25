@@ -49,5 +49,6 @@ router.get('/messages', adminController.getAllMessages); // Liste pour admin
 router.get('/messages/user/:userId', adminController.getUserMessages); // Liste pour un utilisateur
 router.put('/messages/:id/read', adminController.markAsRead); // Marquer comme lu
 router.get('/messages/inbox', authMiddleware, adminMiddleware, adminController.getInbox);
+router.delete('/messages/:id', adminController.deleteMessage);
 
 module.exports = router;
