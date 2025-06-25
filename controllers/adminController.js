@@ -436,9 +436,10 @@ const markAsRead = async (req, res) => {
 
 const getInbox = async (req, res) => {
   try {
-    // Tous les messages où l'admin connecté est dans 'to'
     const adminId = req.user.userId;
-    const messages = await Message.find({ to: adminId, from: { $ne: null } }).sort({ sentAt: -1 }).populate('from', 'nom email');
+    const messages = await Message.find({ to: { $in: [adminId] }, from: { $ne: null } })
+      .sort({ sentAt: -1 })
+      .populate('from', 'nom email');
     res.json(messages);
   } catch (error) {
     res.status(500).json({ message: "Erreur lors de la récupération de la boîte de réception." });
