@@ -407,7 +407,7 @@ const sendMessage = async (req, res) => {
     // Envoi d'e-mail à chaque destinataire
     const users = await User.find({ _id: { $in: to } });
     for (const user of users) {
-      await sendOtpMail(user.email, subject, bodyHtml);
+      await sendOtpMail(user.email, `${subject}\n\n${body}`);
     }
 
     res.status(201).json({ message: 'Message envoyé et enregistré.' });
