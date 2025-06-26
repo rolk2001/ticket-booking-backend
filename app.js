@@ -7,7 +7,12 @@ const app = express();
 
 // Configuration CORS propre
 const corsOptions = {
-  origin: '*',
+  origin: [
+    'http://localhost:8100', // Pour le développement local Ionic
+    'http://localhost',      // Pour les applications web locales
+    // Ajoute ici l'URL de ton frontend déployé si besoin, ex:
+    // 'https://ton-frontend.onrender.com'
+  ],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization'],
