@@ -1,7 +1,6 @@
 /**
- * Contrôleur d'authentification pour la gestion des utilisateurs :
- * inscription, connexion, OTP, et mise à jour du profil.
- * Gère aussi la vérification d'email via OTP.
+ * @file authController.js
+ * @brief Contrôleur d'authentification pour la gestion des utilisateurs : inscription, connexion, OTP, et mise à jour du profil. Gère aussi la vérification d'email via OTP.
  */
 // controllers/authController.js
 const User = require('../models/User');

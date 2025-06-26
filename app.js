@@ -1,7 +1,21 @@
 /**
- * Fichier principal de configuration de l'application Express.
- * Configure les middlewares, les routes et les options CORS pour l'API Ticket Bus CM.
- * Exporte l'application pour être utilisée par le serveur.
+ * @file app.js
+ * @brief Fichier principal de configuration de l'application Express pour Ticket Bus CM.
+ * @module app
+ * @details Configure les middlewares, les routes et les options CORS pour l'API Ticket Bus CM.
+ * @see server.js pour le démarrage du serveur
+ * @see config/db.js pour la connexion à la base de données
+ * @routes
+ *   - GET /             : Test API
+ *   - /api/auth         : Authentification
+ *   - /api/bus          : Gestion des bus
+ *   - /api/terminaux    : Gestion des terminaux
+ *   - /api/schedules    : Gestion des horaires
+ *   - /api/reservations : Gestion des réservations
+ *   - /api/payments     : Paiements
+ *   - /api/tickets      : Tickets
+ *   - /api/admin        : Administration
+ *   - /api/user         : Utilisateur
  */
 // app.js
 const express = require('express');

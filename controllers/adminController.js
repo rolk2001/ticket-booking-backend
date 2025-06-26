@@ -9,7 +9,8 @@ const Message = require('../models/Message');
 const sendOtpMail = require('../utils/sendOtpMail'); // réutilise ton utilitaire mail
 
 /**
- * Contrôleur administrateur pour la gestion centralisée des bus, terminaux, horaires, réservations, paiements, tickets, utilisateurs et messages.
+ * @file adminController.js
+ * @brief Contrôleur administrateur pour la gestion centralisée des bus, terminaux, horaires, réservations, paiements, tickets, utilisateurs et messages.
  * Permet d'obtenir des statistiques, de gérer les entités principales et de communiquer avec les utilisateurs.
  */
 

@@ -1,5 +1,10 @@
 /**
- * Routes d'authentification : connexion, inscription, OTP, modification de profil.
+ * @file auth.js
+ * @brief Routes d'authentification : connexion, inscription, OTP, modification de profil.
+ * @route POST /api/auth/login Connexion utilisateur
+ * @route PUT /api/auth/profile Modification du profil utilisateur (protégée)
+ * @route POST /api/auth/request-signup-otp Demande d'OTP pour inscription
+ * @route POST /api/auth/verify-otp-register Vérification OTP et inscription
  */
 // routes/auth.js
 const express = require('express');

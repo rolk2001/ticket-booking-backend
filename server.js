@@ -1,6 +1,10 @@
 /**
- * Point d'entrée du serveur Node.js.
- * Initialise la connexion à la base de données et démarre l'application Express sur le port défini.
+ * @file server.js
+ * @brief Point d'entrée du serveur Node.js pour Ticket Bus CM.
+ * @module server
+ * @details Initialise la connexion à la base de données et démarre l'application Express sur le port défini.
+ * @see app.js pour la configuration de l'application
+ * @see config/db.js pour la connexion à la base de données
  */
 // server.js
 const app = require('./app');

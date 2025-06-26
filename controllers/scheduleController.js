@@ -1,20 +1,18 @@
 /**
- * Contrôleur pour la gestion des horaires : création, listing et récupération par ID.
+ * @file scheduleController.js
+ * @brief Contrôleur pour la gestion des horaires : création, listing et récupération par ID.
  */
 // controllers/scheduleController.js
 const Schedule = require('../models/Schedule');
 const Bus = require('../models/Bus');
 
 /**
- * Crée un nouvel horaire pour un bus donné.
- * @route POST /api/schedules
- * @param {string} bus_id - Identifiant du bus
- * @param {string} origine - Terminal de départ
- * @param {string} destination - Terminal d'arrivée
- * @param {string} heure_depart - Heure de départ
- * @param {string} heure_arrivee - Heure d'arrivée
- * @param {number} prix - Prix du trajet
- * @returns {Object} Message de succès et horaire créé
+ * @brief Crée un nouvel horaire pour un bus donné.
+ * @param {Object} req Requête HTTP Express contenant les infos d'horaire.
+ * @param {Object} res Réponse HTTP Express.
+ * @returns {void}
+ * @example
+ * creerHoraire(req, res);
  */
 exports.creerHoraire = async (req, res) => {
   try {
@@ -45,12 +43,12 @@ exports.creerHoraire = async (req, res) => {
 };
 
 /**
- * Liste tous les horaires, avec possibilité de filtrer par origine, destination et date.
- * @route GET /api/schedules
- * @param {string} origine - Terminal de départ (query)
- * @param {string} destination - Terminal d'arrivée (query)
- * @param {string} date - Date du trajet (query)
- * @returns {Array} Liste des horaires
+ * @brief Liste tous les horaires, avec possibilité de filtrer par origine, destination et date.
+ * @param {Object} req Requête HTTP Express (query: origine, destination, date).
+ * @param {Object} res Réponse HTTP Express.
+ * @returns {void}
+ * @example
+ * listerHoraires(req, res);
  */
 exports.listerHoraires = async (req, res) => {
   try {
@@ -85,10 +83,12 @@ exports.listerHoraires = async (req, res) => {
 };
 
 /**
- * Récupère un horaire par son identifiant.
- * @route GET /api/schedules/:id
- * @param {string} id - Identifiant de l'horaire
- * @returns {Object} Horaire ou message d'erreur
+ * @brief Récupère un horaire par son identifiant.
+ * @param {Object} req Requête HTTP Express (params: id).
+ * @param {Object} res Réponse HTTP Express.
+ * @returns {void}
+ * @example
+ * recupererHoraire(req, res);
  */
 exports.recupererHoraire = async (req, res) => {
   // ... (le reste du fichier reste inchangé)

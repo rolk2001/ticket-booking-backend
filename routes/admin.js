@@ -1,6 +1,17 @@
 /**
- * Routes d'administration pour la gestion centralisée des bus, terminaux, horaires, réservations, paiements, tickets, utilisateurs et messages.
- * Toutes les routes sont protégées par le middleware admin.
+ * @file admin.js
+ * @brief Routes d'administration pour la gestion centralisée des bus, terminaux, horaires, réservations, paiements, tickets, utilisateurs et messages.
+ * @details Toutes les routes sont protégées par le middleware admin.
+ * @route GET /api/admin/dashboard Statistiques du dashboard
+ * @route GET/POST/PUT/DELETE /api/admin/buses Gestion des bus
+ * @route GET/POST/PUT/DELETE /api/admin/terminals Gestion des terminaux
+ * @route GET/POST/PUT/DELETE /api/admin/schedules Gestion des horaires
+ * @route GET/PUT /api/admin/reservations Gestion des réservations
+ * @route GET /api/admin/payments Gestion des paiements
+ * @route GET /api/admin/tickets Gestion des tickets
+ * @route GET/PUT/DELETE /api/admin/users Gestion des utilisateurs
+ * @route POST/GET/PUT /api/admin/messages Gestion des messages
+ * @route GET /api/admin/messages/inbox Boîte de réception admin
  */
 const express = require('express');
 const router = express.Router();

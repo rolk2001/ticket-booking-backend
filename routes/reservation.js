@@ -1,5 +1,8 @@
 /**
- * Routes pour la création et la consultation des réservations de tickets.
+ * @file reservation.js
+ * @brief Routes pour la création et la consultation des réservations de tickets.
+ * @route POST /api/reservation Crée une réservation (protégée)
+ * @route GET /api/reservation/my-reservations Liste les réservations de l'utilisateur connecté (protégée)
  */
 // routes/reservation.js
 const express = require('express');

@@ -1,10 +1,13 @@
 /**
- * Modèle Mongoose pour les réservations de tickets.
+ * @file Reservation.js
+ * @brief Modèle Mongoose pour les réservations de tickets.
  * @typedef {Object} Reservation
- * @property {ObjectId} user - Référence vers l'utilisateur
- * @property {ObjectId} schedule - Référence vers l'horaire
- * @property {Number} nombre_places - Nombre de places réservées
- * @property {String} statut - Statut de la réservation (en_attente, confirmée, annulée, terminée)
+ * @property {ObjectId} user Référence vers l'utilisateur
+ * @property {ObjectId} schedule Référence vers l'horaire
+ * @property {Number} nombre_places Nombre de places réservées
+ * @property {String} statut Statut de la réservation (en_attente, confirmée, annulée, terminée)
+ * @example
+ * const reservation = new Reservation({ user, schedule, nombre_places: 2 });
  */
 // models/Reservation.js
 const mongoose = require('mongoose');

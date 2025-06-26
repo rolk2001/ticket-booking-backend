@@ -1,11 +1,12 @@
 /**
- * Contrôleur pour la gestion des bus : ajout, modification et listing.
+ * @file busController.js
+ * @brief Contrôleur pour la gestion des bus : ajout, modification et listing.
  */
 // controllers/busController.js
 const Bus = require('../models/Bus');
 
 /**
- * Ajoute un nouveau bus.
+ * @brief Ajoute un nouveau bus.
  * @route POST /api/bus
  * @param {string} numero - Numéro du bus
  * @param {number} capacite - Capacité du bus
@@ -29,7 +30,7 @@ exports.ajouterBus = async (req, res) => {
 };
 
 /**
- * Modifie un bus existant.
+ * @brief Modifie un bus existant.
  * @route PUT /api/bus/:id
  * @param {string} id - Identifiant du bus à modifier
  * @returns {Object} Message de succès ou d'erreur
@@ -46,7 +47,7 @@ exports.modifierBus = async (req, res) => {
 };
 
 /**
- * Liste tous les bus.
+ * @brief Liste tous les bus.
  * @route GET /api/bus
  * @returns {Array} Liste des bus
  */

@@ -1,14 +1,17 @@
 const mongoose = require('mongoose');
 
 /**
- * Modèle Mongoose pour les messages entre utilisateurs et admins.
+ * @file Message.js
+ * @brief Modèle Mongoose pour les messages entre utilisateurs et admins.
  * @typedef {Object} Message
- * @property {Array<ObjectId>} to - Destinataires du message
- * @property {ObjectId} from - Expéditeur du message
- * @property {String} subject - Sujet du message
- * @property {String} body - Contenu du message
- * @property {Date} sentAt - Date d'envoi
- * @property {Array<ObjectId>} readBy - Utilisateurs ayant lu le message
+ * @property {Array<ObjectId>} to Destinataires du message
+ * @property {ObjectId} from Expéditeur du message
+ * @property {String} subject Sujet du message
+ * @property {String} body Contenu du message
+ * @property {Date} sentAt Date d'envoi
+ * @property {Array<ObjectId>} readBy Utilisateurs ayant lu le message
+ * @example
+ * const msg = new Message({ to: [userId], from: adminId, subject: 'Info', body: 'Bienvenue !' });
  */
 
 const messageSchema = new mongoose.Schema({

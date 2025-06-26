@@ -1,5 +1,6 @@
 /**
- * Contrôleur pour la gestion des réservations : création, consultation et sièges réservés.
+ * @file reservationController.js
+ * @brief Contrôleur pour la gestion des réservations : création, consultation et sièges réservés.
  */
 // controllers/reservationController.js
 const Reservation = require('../models/Reservation');
@@ -8,12 +9,12 @@ const Ticket = require('../models/Ticket');
 const QRCode = require('qrcode');
 
 /**
- * Crée une nouvelle réservation et génère un ticket avec QR code.
- * @route POST /api/reservations
- * @param {string} schedule - Identifiant de l'horaire
- * @param {number} nombre_places - Nombre de places à réserver
- * @param {string} seat - Siège assigné (optionnel)
- * @returns {Object} Message de succès, réservation et ticket
+ * @brief Crée une nouvelle réservation et génère un ticket avec QR code.
+ * @param {Object} req Requête HTTP Express (body: schedule, nombre_places, seat).
+ * @param {Object} res Réponse HTTP Express.
+ * @returns {void}
+ * @example
+ * creerReservation(req, res);
  */
 exports.creerReservation = async (req, res) => {
   try {
@@ -63,9 +64,12 @@ exports.creerReservation = async (req, res) => {
 };
 
 /**
- * Récupère les réservations de l'utilisateur connecté.
- * @route GET /api/reservations/mes
- * @returns {Array} Liste des réservations de l'utilisateur
+ * @brief Récupère les réservations de l'utilisateur connecté.
+ * @param {Object} req Requête HTTP Express.
+ * @param {Object} res Réponse HTTP Express.
+ * @returns {void}
+ * @example
+ * mesReservations(req, res);
  */
 exports.mesReservations = async (req, res) => {
   try {
@@ -88,10 +92,12 @@ exports.mesReservations = async (req, res) => {
 };
 
 /**
- * Récupère la liste des sièges réservés pour un horaire donné.
- * @route GET /api/reservations/:scheduleId/seats
- * @param {string} scheduleId - Identifiant de l'horaire
- * @returns {Array} Liste des sièges réservés
+ * @brief Récupère la liste des sièges réservés pour un horaire donné.
+ * @param {Object} req Requête HTTP Express (params: scheduleId).
+ * @param {Object} res Réponse HTTP Express.
+ * @returns {void}
+ * @example
+ * getReservedSeats(req, res);
  */
 exports.getReservedSeats = async (req, res) => {
   try {

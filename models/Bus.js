@@ -1,12 +1,14 @@
 /**
- * Modèle Mongoose pour les bus.
- * Contient les informations sur chaque bus de la compagnie.
+ * @file Bus.js
+ * @brief Modèle Mongoose pour les bus.
  * @typedef {Object} Bus
- * @property {String} numero - Numéro unique du bus
- * @property {Number} capacite - Capacité du bus
- * @property {String} compagnie - Compagnie du bus
- * @property {String} type_bus - Type de bus (Standard, VIP, Climatisé)
- * @property {String} status - Statut du bus (actif, inactif)
+ * @property {String} numero Numéro unique du bus
+ * @property {Number} capacite Capacité du bus
+ * @property {String} compagnie Compagnie du bus
+ * @property {String} type_bus Type de bus (Standard, VIP, Climatisé)
+ * @property {String} status Statut du bus (actif, inactif)
+ * @example
+ * const bus = new Bus({ numero: 'BUS001', capacite: 50, compagnie: 'Express', type_bus: 'VIP' });
  */
 // models/Bus.js
 const mongoose = require('mongoose');

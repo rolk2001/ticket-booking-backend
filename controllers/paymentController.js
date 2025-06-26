@@ -1,5 +1,6 @@
 /**
- * Contrôleur pour la gestion des paiements et de l'intégration NotchPay.
+ * @file paymentController.js
+ * @brief Contrôleur pour la gestion des paiements et de l'intégration NotchPay.
  * Gère l'initiation, la réception de webhook et la génération de tickets.
  */
 // controllers/paymentController.js
@@ -11,10 +12,13 @@ const Ticket = require('../models/Ticket');
 const qrcode = require('qrcode');
 
 /**
- * (Obsolète) Simule le paiement et la génération de ticket.
- * @route POST /api/payments/process
+ * @brief (Obsolète) Simule le paiement et la génération de ticket.
+ * @param {Object} req Requête HTTP Express.
+ * @param {Object} res Réponse HTTP Express.
+ * @returns {void}
  * @deprecated
- * @returns {Object} Message d'erreur indiquant que la route n'est plus utilisée
+ * @example
+ * processPayment(req, res);
  */
 exports.processPayment = async (req, res) => {
   // Cette fonction est maintenant obsolète, nous utilisons le webhook
@@ -22,9 +26,12 @@ exports.processPayment = async (req, res) => {
 };
 
 /**
- * Gère le webhook NotchPay pour la confirmation de paiement et la génération du ticket.
- * @route POST /api/payments/notchpay-webhook
- * @returns {Object} Statut de traitement du webhook
+ * @brief Gère le webhook NotchPay pour la confirmation de paiement et la génération du ticket.
+ * @param {Object} req Requête HTTP Express.
+ * @param {Object} res Réponse HTTP Express.
+ * @returns {void}
+ * @example
+ * handleNotchPayWebhook(req, res);
  */
 exports.handleNotchPayWebhook = async (req, res) => {
   console.log('Webhook NotchPay reçu !', req.body);
@@ -139,10 +146,12 @@ exports.handleNotchPayWebhook = async (req, res) => {
 };
 
 /**
- * Initialise un paiement NotchPay pour une réservation donnée.
- * @route POST /api/payments/initiate
- * @param {string} reservationId - Identifiant de la réservation
- * @returns {Object} URL d'autorisation NotchPay ou message d'erreur
+ * @brief Initialise un paiement NotchPay pour une réservation donnée.
+ * @param {Object} req Requête HTTP Express (body: reservationId).
+ * @param {Object} res Réponse HTTP Express.
+ * @returns {void}
+ * @example
+ * initiatePayment(req, res);
  */
 exports.initiatePayment = async (req, res) => {
   console.log('=== DÉBUT initiatePayment ===');

@@ -1,11 +1,14 @@
 /**
- * Modèle Mongoose pour les tickets générés après réservation et paiement.
+ * @file Ticket.js
+ * @brief Modèle Mongoose pour les tickets générés après réservation et paiement.
  * @typedef {Object} Ticket
- * @property {ObjectId} reservation_id - Référence vers la réservation
- * @property {ObjectId} user_id - Référence vers l'utilisateur
- * @property {ObjectId} schedule - Référence vers l'horaire
- * @property {String} qr_code - Données du QR code
- * @property {String} seat - Siège assigné
+ * @property {ObjectId} reservation_id Référence vers la réservation
+ * @property {ObjectId} user_id Référence vers l'utilisateur
+ * @property {ObjectId} schedule Référence vers l'horaire
+ * @property {String} qr_code Données du QR code
+ * @property {String} seat Siège assigné
+ * @example
+ * const ticket = new Ticket({ reservation_id, user_id, schedule, seat: 'A1' });
  */
 // models/Ticket.js
 const mongoose = require('mongoose');

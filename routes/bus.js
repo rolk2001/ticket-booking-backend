@@ -1,5 +1,9 @@
 /**
- * Routes pour la gestion des bus (ajout, modification, listing).
+ * @file bus.js
+ * @brief Routes pour la gestion des bus (ajout, modification, listing).
+ * @route POST /api/bus Ajoute un nouveau bus
+ * @route PUT /api/bus/:id Modifie un bus existant
+ * @route GET /api/bus Liste tous les bus
  */
 // routes/bus.js
 const express = require('express');

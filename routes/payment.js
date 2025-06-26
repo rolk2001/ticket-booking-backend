@@ -1,5 +1,8 @@
 /**
- * Routes pour l'initiation des paiements et la gestion des webhooks de paiement.
+ * @file payment.js
+ * @brief Routes pour l'initiation des paiements et la gestion des webhooks de paiement.
+ * @route POST /api/payment/initiate-payment Initie un paiement (protégée)
+ * @route POST /api/payment/notchpay-webhook Webhook NotchPay (non protégée)
  */
 // routes/payment.js
 const express = require('express');

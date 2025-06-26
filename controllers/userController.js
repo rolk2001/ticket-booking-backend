@@ -2,8 +2,8 @@ const Message = require('../models/Message');
 const User = require('../models/User');
 
 /**
- * Contrôleur utilisateur pour la gestion des messages et des interactions avec l'admin.
- * Permet de récupérer, supprimer et répondre aux messages.
+ * @file userController.js
+ * @brief Contrôleur utilisateur pour la gestion des messages et des interactions avec l'admin. Permet de récupérer, supprimer et répondre aux messages.
  */
 
 // Récupérer les messages de l'utilisateur connecté

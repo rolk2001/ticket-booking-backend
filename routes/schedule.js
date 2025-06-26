@@ -1,5 +1,9 @@
 /**
- * Routes pour la gestion des horaires de bus et la récupération des sièges réservés.
+ * @file schedule.js
+ * @brief Routes pour la gestion des horaires de bus et la récupération des sièges réservés.
+ * @route POST /api/schedule Crée un horaire
+ * @route GET /api/schedule Liste les horaires
+ * @route GET /api/schedule/:scheduleId/seats Récupère les sièges réservés pour un horaire
  */
 // routes/schedule.js
 const express = require('express');

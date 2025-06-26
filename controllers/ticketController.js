@@ -2,14 +2,17 @@ const Ticket = require('../models/Ticket');
 const Reservation = require('../models/Reservation');
 
 /**
- * Contrôleur pour la gestion des tickets : récupération par réservation et sièges réservés.
+ * @file ticketController.js
+ * @brief Contrôleur pour la gestion des tickets : récupération par réservation et sièges réservés.
  */
 
 /**
- * Récupère le ticket associé à une réservation pour l'utilisateur connecté.
- * @route GET /api/tickets/:reservationId
- * @param {string} reservationId - Identifiant de la réservation
- * @returns {Object} Ticket ou message d'erreur
+ * @brief Récupère le ticket associé à une réservation pour l'utilisateur connecté.
+ * @param {Object} req Requête HTTP Express (params: reservationId).
+ * @param {Object} res Réponse HTTP Express.
+ * @returns {void}
+ * @example
+ * getTicketByReservationId(req, res);
  */
 exports.getTicketByReservationId = async (req, res) => {
   try {
@@ -50,10 +53,12 @@ exports.getTicketByReservationId = async (req, res) => {
 };
 
 /**
- * Récupère la liste des sièges réservés pour un horaire donné.
- * @route GET /api/tickets/:scheduleId/seats
- * @param {string} scheduleId - Identifiant de l'horaire
- * @returns {Array} Liste des sièges réservés
+ * @brief Récupère la liste des sièges réservés pour un horaire donné.
+ * @param {Object} req Requête HTTP Express (params: scheduleId).
+ * @param {Object} res Réponse HTTP Express.
+ * @returns {void}
+ * @example
+ * getReservedSeats(req, res);
  */
 exports.getReservedSeats = async (req, res) => {
   try {

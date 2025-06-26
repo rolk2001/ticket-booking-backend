@@ -1,11 +1,14 @@
 /**
- * Modèle Mongoose pour les paiements liés aux réservations.
+ * @file Payment.js
+ * @brief Modèle Mongoose pour les paiements liés aux réservations.
  * @typedef {Object} Payment
- * @property {ObjectId} reservation_id - Référence vers la réservation
- * @property {Number} montant - Montant payé
- * @property {String} moyen - Moyen de paiement (Mobile Money, NotchPay, Test)
- * @property {String} status - Statut du paiement (en attente, succès, échec)
- * @property {String} transaction_id - Identifiant de la transaction
+ * @property {ObjectId} reservation_id Référence vers la réservation
+ * @property {Number} montant Montant payé
+ * @property {String} moyen Moyen de paiement (Mobile Money, NotchPay, Test)
+ * @property {String} status Statut du paiement (en attente, succès, échec)
+ * @property {String} transaction_id Identifiant de la transaction
+ * @example
+ * const payment = new Payment({ reservation_id, montant: 10000, moyen: 'NotchPay', status: 'succès' });
  */
 // models/Payment.js
 const mongoose = require('mongoose');
