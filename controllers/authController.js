@@ -107,6 +107,11 @@ exports.updateProfile = async (req, res) => {
 // 1. Demande OTP
 exports.requestSignupOtp = async (req, res) => {
   const { email } = req.body;
+  // Chercher si l'utilisateur existe déjà
+  const userExists = await User.findOne({ email });
+  if (userExists) {
+    return res.status(400).json({ message: "Cet email a déjà un compte, veuillez vous connecter." });
+  }
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
   const expiresAt = new Date(Date.now() + 5 * 60 * 1000); 
 
