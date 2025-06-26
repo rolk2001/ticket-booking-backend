@@ -407,7 +407,7 @@ const sendMessage = async (req, res) => {
     // Envoi d'e-mail à chaque destinataire
     const users = await User.find({ _id: { $in: to } });
     for (const user of users) {
-      await sendOtpMail(user.email, `${subject}\n\n${body}`);
+      await sendOtpMail(user.email, subject, `<p>${body}</p>`);
     }
 
     res.status(201).json({ message: 'Message envoyé et enregistré.' });
@@ -446,21 +446,6 @@ const getInbox = async (req, res) => {
   }
 };
 
-// ===== GESTION DES MESSAGES (SUPPRESSION) =====
-const deleteMessage = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const message = await Message.findByIdAndDelete(id);
-    if (!message) {
-      return res.status(404).json({ message: 'Message non trouvé' });
-    }
-    res.json({ message: 'Message supprimé avec succès' });
-  } catch (error) {
-    console.error('Erreur deleteMessage:', error);
-    res.status(500).json({ message: 'Erreur serveur' });
-  }
-};
-
 module.exports = {
   getDashboardStats,
   getAllBuses,
@@ -486,6 +471,5 @@ module.exports = {
   getAllMessages,
   getUserMessages,
   markAsRead,
-  getInbox,
-  deleteMessage
+  getInbox
 };
