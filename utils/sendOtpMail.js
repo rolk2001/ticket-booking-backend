@@ -8,11 +8,11 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-module.exports = async function sendOtpMail(email, subject, messageBody) {
+module.exports = async function sendOtpMail(email, otp) {
   await transporter.sendMail({
     from: `"Ticket Bus CM" <${process.env.GMAIL_USER}>`,
     to: email,
-    subject: subject,
-    html: messageBody
+    subject: "Votre code de vérification",
+    html: `<p>Votre code de vérification est : <b>${otp}</b></p>`
   });
 };
