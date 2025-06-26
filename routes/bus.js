@@ -1,3 +1,6 @@
+/**
+ * Routes pour la gestion des bus (ajout, modification, listing).
+ */
 // routes/bus.js
 const express = require('express');
 const router = express.Router();

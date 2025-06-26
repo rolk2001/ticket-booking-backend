@@ -1,6 +1,16 @@
 const Ticket = require('../models/Ticket');
 const Reservation = require('../models/Reservation');
 
+/**
+ * Contrôleur pour la gestion des tickets : récupération par réservation et sièges réservés.
+ */
+
+/**
+ * Récupère le ticket associé à une réservation pour l'utilisateur connecté.
+ * @route GET /api/tickets/:reservationId
+ * @param {string} reservationId - Identifiant de la réservation
+ * @returns {Object} Ticket ou message d'erreur
+ */
 exports.getTicketByReservationId = async (req, res) => {
   try {
     const { reservationId } = req.params;
@@ -39,7 +49,12 @@ exports.getTicketByReservationId = async (req, res) => {
   }
 };
 
-// GET /:scheduleId/seats
+/**
+ * Récupère la liste des sièges réservés pour un horaire donné.
+ * @route GET /api/tickets/:scheduleId/seats
+ * @param {string} scheduleId - Identifiant de l'horaire
+ * @returns {Array} Liste des sièges réservés
+ */
 exports.getReservedSeats = async (req, res) => {
   try {
     const { scheduleId } = req.params;

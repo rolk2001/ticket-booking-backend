@@ -1,3 +1,8 @@
+/**
+ * Fichier principal de configuration de l'application Express.
+ * Configure les middlewares, les routes et les options CORS pour l'API Ticket Bus CM.
+ * Exporte l'application pour être utilisée par le serveur.
+ */
 // app.js
 const express = require('express');
 const cors = require('cors');

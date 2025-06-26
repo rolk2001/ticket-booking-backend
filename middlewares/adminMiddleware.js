@@ -1,6 +1,15 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+/**
+ * Middleware pour vérifier si l'utilisateur est authentifié et possède le rôle admin.
+ * Protège les routes réservées à l'administration.
+ * Vérifie le token JWT et le type d'utilisateur.
+ * @function adminMiddleware
+ * @param {Object} req - Objet requête Express
+ * @param {Object} res - Objet réponse Express
+ * @param {Function} next - Fonction de rappel pour passer au middleware suivant
+ */
 const adminMiddleware = async (req, res, next) => {
   try {
     // Récupérer le token depuis le header Authorization

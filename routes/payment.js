@@ -1,3 +1,6 @@
+/**
+ * Routes pour l'initiation des paiements et la gestion des webhooks de paiement.
+ */
 // routes/payment.js
 const express = require('express');
 const router = express.Router();

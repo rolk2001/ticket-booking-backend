@@ -1,8 +1,21 @@
+/**
+ * Contrôleur pour la gestion des horaires : création, listing et récupération par ID.
+ */
 // controllers/scheduleController.js
 const Schedule = require('../models/Schedule');
 const Bus = require('../models/Bus');
 
-// Créer un horaire
+/**
+ * Crée un nouvel horaire pour un bus donné.
+ * @route POST /api/schedules
+ * @param {string} bus_id - Identifiant du bus
+ * @param {string} origine - Terminal de départ
+ * @param {string} destination - Terminal d'arrivée
+ * @param {string} heure_depart - Heure de départ
+ * @param {string} heure_arrivee - Heure d'arrivée
+ * @param {number} prix - Prix du trajet
+ * @returns {Object} Message de succès et horaire créé
+ */
 exports.creerHoraire = async (req, res) => {
   try {
     const { bus_id, origine, destination, heure_depart, heure_arrivee, prix } = req.body;
@@ -31,7 +44,14 @@ exports.creerHoraire = async (req, res) => {
   }
 };
 
-// Lister tous les horaires, avec possibilité de filtrer
+/**
+ * Liste tous les horaires, avec possibilité de filtrer par origine, destination et date.
+ * @route GET /api/schedules
+ * @param {string} origine - Terminal de départ (query)
+ * @param {string} destination - Terminal d'arrivée (query)
+ * @param {string} date - Date du trajet (query)
+ * @returns {Array} Liste des horaires
+ */
 exports.listerHoraires = async (req, res) => {
   try {
     const { origine, destination, date } = req.query;
@@ -64,7 +84,12 @@ exports.listerHoraires = async (req, res) => {
   }
 };
 
-// Récupérer un horaire par son ID
+/**
+ * Récupère un horaire par son identifiant.
+ * @route GET /api/schedules/:id
+ * @param {string} id - Identifiant de l'horaire
+ * @returns {Object} Horaire ou message d'erreur
+ */
 exports.recupererHoraire = async (req, res) => {
   // ... (le reste du fichier reste inchangé)
 };

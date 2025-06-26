@@ -1,3 +1,7 @@
+/**
+ * Routes utilisateur pour la gestion des messages et la communication avec l'admin.
+ * Toutes les routes sont protégées par le middleware d'authentification.
+ */
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middlewares/authMiddleware');

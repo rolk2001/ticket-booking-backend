@@ -1,3 +1,13 @@
+/**
+ * Modèle Mongoose pour les utilisateurs (clients et admins).
+ * @typedef {Object} User
+ * @property {String} nom - Nom de l'utilisateur
+ * @property {String} email - Email unique
+ * @property {String} mot_de_passe - Mot de passe hashé
+ * @property {String} type - Type d'utilisateur (client, admin)
+ * @property {String} telephone - Numéro de téléphone
+ * @property {String} photo - Photo de profil (optionnelle)
+ */
 // models/User.js
 const mongoose = require('mongoose');
 

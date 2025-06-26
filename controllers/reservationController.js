@@ -1,10 +1,20 @@
+/**
+ * Contrôleur pour la gestion des réservations : création, consultation et sièges réservés.
+ */
 // controllers/reservationController.js
 const Reservation = require('../models/Reservation');
 const Schedule = require('../models/Schedule');
 const Ticket = require('../models/Ticket');
 const QRCode = require('qrcode');
 
-// Créer une réservation
+/**
+ * Crée une nouvelle réservation et génère un ticket avec QR code.
+ * @route POST /api/reservations
+ * @param {string} schedule - Identifiant de l'horaire
+ * @param {number} nombre_places - Nombre de places à réserver
+ * @param {string} seat - Siège assigné (optionnel)
+ * @returns {Object} Message de succès, réservation et ticket
+ */
 exports.creerReservation = async (req, res) => {
   try {
     const { schedule: scheduleId, nombre_places, seat } = req.body;
@@ -52,7 +62,11 @@ exports.creerReservation = async (req, res) => {
   }
 };
 
-// Obtenir les réservations de l'utilisateur connecté
+/**
+ * Récupère les réservations de l'utilisateur connecté.
+ * @route GET /api/reservations/mes
+ * @returns {Array} Liste des réservations de l'utilisateur
+ */
 exports.mesReservations = async (req, res) => {
   try {
     const reservations = await Reservation.find({ user: req.user.userId })
@@ -73,7 +87,12 @@ exports.mesReservations = async (req, res) => {
   }
 };
 
-// Obtenir les sièges réservés pour un horaire donné
+/**
+ * Récupère la liste des sièges réservés pour un horaire donné.
+ * @route GET /api/reservations/:scheduleId/seats
+ * @param {string} scheduleId - Identifiant de l'horaire
+ * @returns {Array} Liste des sièges réservés
+ */
 exports.getReservedSeats = async (req, res) => {
   try {
     const { scheduleId } = req.params;

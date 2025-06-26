@@ -1,3 +1,7 @@
+/**
+ * Script utilitaire pour créer un utilisateur administrateur par défaut dans la base de données.
+ * À lancer manuellement pour initialiser un compte admin.
+ */
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const User = require('./models/User');

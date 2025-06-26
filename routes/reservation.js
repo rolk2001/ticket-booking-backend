@@ -1,3 +1,6 @@
+/**
+ * Routes pour la création et la consultation des réservations de tickets.
+ */
 // routes/reservation.js
 const express = require('express');
 const router = express.Router();

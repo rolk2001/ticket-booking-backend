@@ -1,7 +1,17 @@
 const Message = require('../models/Message');
 const User = require('../models/User');
 
+/**
+ * Contrôleur utilisateur pour la gestion des messages et des interactions avec l'admin.
+ * Permet de récupérer, supprimer et répondre aux messages.
+ */
+
 // Récupérer les messages de l'utilisateur connecté
+/**
+ * Récupère les messages de l'utilisateur connecté.
+ * @route GET /api/user/messages
+ * @returns {Array} Liste des messages reçus par l'utilisateur
+ */
 exports.getMyMessages = async (req, res) => {
   try {
     const userId = req.user.userId; // récupéré grâce au middleware d'auth
@@ -13,6 +23,12 @@ exports.getMyMessages = async (req, res) => {
 };
 
 // Suppression personnelle d'un message
+/**
+ * Permet à l'utilisateur de supprimer un de ses messages.
+ * @route DELETE /api/user/messages/:id
+ * @param {string} id - Identifiant du message à supprimer
+ * @returns {Object} Succès ou message d'erreur
+ */
 exports.deleteMyMessage = async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -36,6 +52,13 @@ exports.deleteMyMessage = async (req, res) => {
   }
 };
 
+/**
+ * Permet à l'utilisateur de répondre à l'admin.
+ * @route POST /api/user/reply-admin
+ * @param {string} subject - Sujet du message
+ * @param {string} body - Contenu du message
+ * @returns {Object} Succès ou message d'erreur
+ */
 exports.replyToAdmin = async (req, res) => {
   try {
     const userId = req.user.userId;

@@ -1,5 +1,14 @@
 const jwt = require('jsonwebtoken');
 
+/**
+ * Middleware d'authentification pour vérifier la présence et la validité du token JWT.
+ * Ajoute les informations utilisateur à req.user si le token est valide.
+ * Protège les routes nécessitant une authentification.
+ * @function authMiddleware
+ * @param {Object} req - Objet requête Express
+ * @param {Object} res - Objet réponse Express
+ * @param {Function} next - Fonction de rappel pour passer au middleware suivant
+ */
 module.exports = function(req, res, next) {
   // Récupère le token depuis l'en-tête (header) de la requête.
   // Le format attendu est "Bearer VOTRE_TOKEN"

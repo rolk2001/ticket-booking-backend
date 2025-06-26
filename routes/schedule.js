@@ -1,3 +1,6 @@
+/**
+ * Routes pour la gestion des horaires de bus et la récupération des sièges réservés.
+ */
 // routes/schedule.js
 const express = require('express');
 const router = express.Router();

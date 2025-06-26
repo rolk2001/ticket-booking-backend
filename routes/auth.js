@@ -1,3 +1,6 @@
+/**
+ * Routes d'authentification : connexion, inscription, OTP, modification de profil.
+ */
 // routes/auth.js
 const express = require('express');
 const router = express.Router();

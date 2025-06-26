@@ -1,7 +1,16 @@
+/**
+ * Contrôleur pour la gestion des terminaux : ajout, modification et listing.
+ */
 // controllers/terminalController.js
 const Terminal = require('../models/Terminal');
 
-// Ajouter un terminal
+/**
+ * Ajoute un nouveau terminal.
+ * @route POST /api/terminaux
+ * @param {string} ville_destination - Ville de destination
+ * @param {string} terminal_info - Informations sur le terminal
+ * @returns {Object} Message de succès ou d'erreur
+ */
 exports.ajouterTerminal = async (req, res) => {
   try {
     const { ville_destination, terminal_info } = req.body;
@@ -13,7 +22,12 @@ exports.ajouterTerminal = async (req, res) => {
   }
 };
 
-// Modifier un terminal
+/**
+ * Modifie un terminal existant.
+ * @route PUT /api/terminaux/:id
+ * @param {string} id - Identifiant du terminal à modifier
+ * @returns {Object} Message de succès ou d'erreur
+ */
 exports.modifierTerminal = async (req, res) => {
   try {
     const { id } = req.params;
@@ -25,7 +39,11 @@ exports.modifierTerminal = async (req, res) => {
   }
 };
 
-// Lister tous les terminaux
+/**
+ * Liste tous les terminaux.
+ * @route GET /api/terminaux
+ * @returns {Array} Liste des terminaux
+ */
 exports.listerTerminaux = async (req, res) => {
   try {
     const terminaux = await Terminal.find();

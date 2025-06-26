@@ -1,3 +1,16 @@
+/**
+ * Modèle Mongoose pour les horaires de bus.
+ * @typedef {Object} Schedule
+ * @property {ObjectId} bus - Référence vers le bus
+ * @property {ObjectId} terminal_depart - Terminal de départ
+ * @property {ObjectId} terminal_arrivee - Terminal d'arrivée
+ * @property {Date} date_depart - Date et heure de départ
+ * @property {Date} date_arrivee - Date et heure d'arrivée
+ * @property {Number} prix - Prix du trajet
+ * @property {Number} places_disponibles - Nombre de places restantes
+ * @property {String} status - Statut de l'horaire (programmé, parti, arrivé, annulé)
+ * @property {Array} seat_map - Carte des sièges
+ */
 // models/Schedule.js
 const mongoose = require('mongoose');
 

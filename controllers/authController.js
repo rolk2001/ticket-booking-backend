@@ -1,3 +1,8 @@
+/**
+ * Contrôleur d'authentification pour la gestion des utilisateurs :
+ * inscription, connexion, OTP, et mise à jour du profil.
+ * Gère aussi la vérification d'email via OTP.
+ */
 // controllers/authController.js
 const User = require('../models/User');
 const EmailVerification = require('../models/EmailVerification');
@@ -5,6 +10,16 @@ const sendOtpMail = require('../utils/sendOtpMail');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+/**
+ * Inscrit un nouvel utilisateur.
+ * @route POST /api/auth/register
+ * @param {string} nom - Nom de l'utilisateur
+ * @param {string} email - Email de l'utilisateur
+ * @param {string} mot_de_passe - Mot de passe
+ * @param {string} telephone - Numéro de téléphone
+ * @param {string} type - Type d'utilisateur (admin, client, etc.)
+ * @returns {Object} Message de succès ou d'erreur
+ */
 exports.register = async (req, res) => {
   try {
     const { nom, email, mot_de_passe, telephone, type } = req.body;
@@ -31,6 +46,13 @@ exports.register = async (req, res) => {
   }
 };
 
+/**
+ * Connecte un utilisateur existant.
+ * @route POST /api/auth/login
+ * @param {string} email - Email de l'utilisateur
+ * @param {string} mot_de_passe - Mot de passe
+ * @returns {Object} Token JWT et informations utilisateur ou message d'erreur
+ */
 exports.login = async (req, res) => {
   console.log('--- Tentative de connexion ---');
   console.log('Body reçu:', req.body);
@@ -84,6 +106,15 @@ exports.login = async (req, res) => {
   }
 };
 
+/**
+ * Met à jour le profil de l'utilisateur connecté.
+ * @route PUT /api/auth/profile
+ * @param {string} nom - Nouveau nom (optionnel)
+ * @param {string} email - Nouvel email (optionnel)
+ * @param {string} telephone - Nouveau téléphone (optionnel)
+ * @param {string} photo - Nouvelle photo (optionnel)
+ * @returns {Object} Utilisateur mis à jour ou message d'erreur
+ */
 exports.updateProfile = async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -104,7 +135,12 @@ exports.updateProfile = async (req, res) => {
   }
 };
 
-// 1. Demande OTP
+/**
+ * Demande l'envoi d'un OTP pour l'inscription.
+ * @route POST /api/auth/request-otp
+ * @param {string} email - Email pour lequel envoyer l'OTP
+ * @returns {Object} Message de succès ou d'erreur
+ */
 exports.requestSignupOtp = async (req, res) => {
   const { email } = req.body;
   // Chercher si l'utilisateur existe déjà
@@ -126,7 +162,16 @@ exports.requestSignupOtp = async (req, res) => {
   res.json({ message: "Code envoyé à votre e-mail." });
 };
 
-// 2. Vérifie OTP et crée le compte
+/**
+ * Vérifie l'OTP et crée le compte utilisateur.
+ * @route POST /api/auth/verify-otp
+ * @param {string} email - Email à vérifier
+ * @param {string} otp - Code OTP reçu
+ * @param {string} nom - Nom de l'utilisateur
+ * @param {string} mot_de_passe - Mot de passe
+ * @param {string} telephone - Numéro de téléphone
+ * @returns {Object} Message de succès ou d'erreur
+ */
 exports.verifyOtpAndRegister = async (req, res) => {
   const { email, otp, nom, mot_de_passe, telephone } = req.body;
   const record = await EmailVerification.findOne({ email });

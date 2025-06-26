@@ -1,3 +1,7 @@
+/**
+ * Routes d'administration pour la gestion centralisée des bus, terminaux, horaires, réservations, paiements, tickets, utilisateurs et messages.
+ * Toutes les routes sont protégées par le middleware admin.
+ */
 const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/adminController');

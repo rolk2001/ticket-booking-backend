@@ -8,7 +8,17 @@ const User = require('../models/User');
 const Message = require('../models/Message');
 const sendOtpMail = require('../utils/sendOtpMail'); // réutilise ton utilitaire mail
 
+/**
+ * Contrôleur administrateur pour la gestion centralisée des bus, terminaux, horaires, réservations, paiements, tickets, utilisateurs et messages.
+ * Permet d'obtenir des statistiques, de gérer les entités principales et de communiquer avec les utilisateurs.
+ */
+
 // ===== DASHBOARD STATISTIQUES =====
+/**
+ * Récupère les statistiques du dashboard admin (bus, terminaux, réservations, revenus, etc.).
+ * @route GET /api/admin/dashboard
+ * @returns {Object} Statistiques et réservations récentes
+ */
 const getDashboardStats = async (req, res) => {
   try {
     const totalBuses = await Bus.countDocuments();
@@ -50,6 +60,11 @@ const getDashboardStats = async (req, res) => {
 };
 
 // ===== GESTION DES BUS =====
+/**
+ * Liste tous les bus.
+ * @route GET /api/admin/buses
+ * @returns {Array} Liste des bus
+ */
 const getAllBuses = async (req, res) => {
   try {
     const buses = await Bus.find().sort({ createdAt: -1 });
@@ -60,6 +75,15 @@ const getAllBuses = async (req, res) => {
   }
 };
 
+/**
+ * Crée un nouveau bus.
+ * @route POST /api/admin/buses
+ * @param {string} numero - Numéro du bus
+ * @param {number} capacite - Capacité du bus
+ * @param {string} compagnie - Compagnie du bus
+ * @param {string} type_bus - Type de bus
+ * @returns {Object} Bus créé
+ */
 const createBus = async (req, res) => {
   try {
     const { numero, capacite, compagnie, type_bus } = req.body;
@@ -79,6 +103,12 @@ const createBus = async (req, res) => {
   }
 };
 
+/**
+ * Modifie un bus existant.
+ * @route PUT /api/admin/buses/:id
+ * @param {string} id - Identifiant du bus
+ * @returns {Object} Bus modifié ou message d'erreur
+ */
 const updateBus = async (req, res) => {
   try {
     const { id } = req.params;
@@ -96,6 +126,12 @@ const updateBus = async (req, res) => {
   }
 };
 
+/**
+ * Supprime un bus.
+ * @route DELETE /api/admin/buses/:id
+ * @param {string} id - Identifiant du bus
+ * @returns {Object} Message de succès ou d'erreur
+ */
 const deleteBus = async (req, res) => {
   try {
     const { id } = req.params;
@@ -113,6 +149,11 @@ const deleteBus = async (req, res) => {
 };
 
 // ===== GESTION DES TERMINAUX =====
+/**
+ * Liste tous les terminaux.
+ * @route GET /api/admin/terminals
+ * @returns {Array} Liste des terminaux
+ */
 const getAllTerminals = async (req, res) => {
   try {
     const terminals = await Terminal.find().sort({ createdAt: -1 });
@@ -123,6 +164,14 @@ const getAllTerminals = async (req, res) => {
   }
 };
 
+/**
+ * Crée un nouveau terminal.
+ * @route POST /api/admin/terminals
+ * @param {string} nom - Nom du terminal
+ * @param {string} ville - Ville du terminal
+ * @param {string} adresse - Adresse du terminal
+ * @returns {Object} Terminal créé
+ */
 const createTerminal = async (req, res) => {
   try {
     const { nom, ville, adresse } = req.body;
@@ -141,6 +190,12 @@ const createTerminal = async (req, res) => {
   }
 };
 
+/**
+ * Modifie un terminal existant.
+ * @route PUT /api/admin/terminals/:id
+ * @param {string} id - Identifiant du terminal
+ * @returns {Object} Terminal modifié ou message d'erreur
+ */
 const updateTerminal = async (req, res) => {
   try {
     const { id } = req.params;
@@ -155,6 +210,12 @@ const updateTerminal = async (req, res) => {
   }
 };
 
+/**
+ * Supprime un terminal.
+ * @route DELETE /api/admin/terminals/:id
+ * @param {string} id - Identifiant du terminal
+ * @returns {Object} Message de succès ou d'erreur
+ */
 const deleteTerminal = async (req, res) => {
   try {
     const { id } = req.params;
@@ -170,6 +231,11 @@ const deleteTerminal = async (req, res) => {
 };
 
 // ===== GESTION DES HORAIRES =====
+/**
+ * Liste tous les horaires.
+ * @route GET /api/admin/schedules
+ * @returns {Array} Liste des horaires
+ */
 const getAllSchedules = async (req, res) => {
   try {
     const schedules = await Schedule.find()
@@ -184,6 +250,18 @@ const getAllSchedules = async (req, res) => {
   }
 };
 
+/**
+ * Crée un nouvel horaire.
+ * @route POST /api/admin/schedules
+ * @param {string} bus - Bus associé
+ * @param {string} terminal_depart - Terminal de départ
+ * @param {string} terminal_arrivee - Terminal d'arrivée
+ * @param {string} date_depart - Date de départ
+ * @param {string} date_arrivee - Date d'arrivée
+ * @param {number} prix - Prix du trajet
+ * @param {number} places_disponibles - Nombre de places disponibles
+ * @returns {Object} Horaire créé
+ */
 const createSchedule = async (req, res) => {
   try {
     const { 
@@ -221,6 +299,12 @@ const createSchedule = async (req, res) => {
   }
 };
 
+/**
+ * Modifie un horaire existant.
+ * @route PUT /api/admin/schedules/:id
+ * @param {string} id - Identifiant de l'horaire
+ * @returns {Object} Horaire modifié ou message d'erreur
+ */
 const updateSchedule = async (req, res) => {
   try {
     const { id } = req.params;
@@ -239,6 +323,12 @@ const updateSchedule = async (req, res) => {
   }
 };
 
+/**
+ * Supprime un horaire.
+ * @route DELETE /api/admin/schedules/:id
+ * @param {string} id - Identifiant de l'horaire
+ * @returns {Object} Message de succès ou d'erreur
+ */
 const deleteSchedule = async (req, res) => {
   try {
     const { id } = req.params;
@@ -254,6 +344,11 @@ const deleteSchedule = async (req, res) => {
 };
 
 // ===== GESTION DES RÉSERVATIONS =====
+/**
+ * Liste toutes les réservations.
+ * @route GET /api/admin/reservations
+ * @returns {Array} Liste des réservations
+ */
 const getAllReservations = async (req, res) => {
   try {
     const reservations = await Reservation.find()
@@ -274,6 +369,13 @@ const getAllReservations = async (req, res) => {
   }
 };
 
+/**
+ * Modifie le statut d'une réservation.
+ * @route PUT /api/admin/reservations/:id
+ * @param {string} id - Identifiant de la réservation
+ * @param {string} statut - Nouveau statut
+ * @returns {Object} Réservation modifiée ou message d'erreur
+ */
 const updateReservationStatus = async (req, res) => {
   try {
     const { id } = req.params;
@@ -297,6 +399,11 @@ const updateReservationStatus = async (req, res) => {
 };
 
 // ===== GESTION DES PAIEMENTS =====
+/**
+ * Liste tous les paiements confirmés.
+ * @route GET /api/admin/payments
+ * @returns {Array} Liste des paiements
+ */
 const getAllPayments = async (req, res) => {
   try {
     const payments = await Payment.find({ status: 'succès' })
@@ -327,6 +434,11 @@ const getAllPayments = async (req, res) => {
 };
 
 // ===== GESTION DES TICKETS =====
+/**
+ * Liste tous les tickets.
+ * @route GET /api/admin/tickets
+ * @returns {Array} Liste des tickets
+ */
 const getAllTickets = async (req, res) => {
   try {
     const tickets = await Ticket.find()
@@ -347,6 +459,11 @@ const getAllTickets = async (req, res) => {
 };
 
 // ===== GESTION DES UTILISATEURS =====
+/**
+ * Liste tous les utilisateurs (clients).
+ * @route GET /api/admin/users
+ * @returns {Array} Liste des utilisateurs
+ */
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.find({ type: 'client' })
@@ -359,6 +476,16 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+/**
+ * Modifie un utilisateur.
+ * @route PUT /api/admin/users/:id
+ * @param {string} id - Identifiant de l'utilisateur
+ * @param {string} nom - Nom (optionnel)
+ * @param {string} email - Email (optionnel)
+ * @param {string} telephone - Téléphone (optionnel)
+ * @param {string} type - Type d'utilisateur (optionnel)
+ * @returns {Object} Utilisateur modifié ou message d'erreur
+ */
 const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
@@ -378,6 +505,12 @@ const updateUser = async (req, res) => {
   }
 };
 
+/**
+ * Supprime un utilisateur (sauf soi-même).
+ * @route DELETE /api/admin/users/:id
+ * @param {string} id - Identifiant de l'utilisateur
+ * @returns {Object} Message de succès ou d'erreur
+ */
 const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
@@ -398,6 +531,14 @@ const deleteUser = async (req, res) => {
   }
 };
 
+/**
+ * Envoie un message à un ou plusieurs utilisateurs.
+ * @route POST /api/admin/messages
+ * @param {Array<string>} to - Destinataires
+ * @param {string} subject - Sujet du message
+ * @param {string} body - Contenu du message
+ * @returns {Object} Message envoyé
+ */
 const sendMessage = async (req, res) => {
   try {
     const { to, subject, body } = req.body;
@@ -416,17 +557,35 @@ const sendMessage = async (req, res) => {
   }
 };
 
+/**
+ * Liste tous les messages envoyés.
+ * @route GET /api/admin/messages
+ * @returns {Array} Liste des messages
+ */
 const getAllMessages = async (req, res) => {
   const messages = await Message.find().populate('to', 'nom email').sort({ sentAt: -1 });
   res.json(messages);
 };
 
+/**
+ * Liste les messages reçus par un utilisateur donné.
+ * @route GET /api/admin/messages/user/:userId
+ * @param {string} userId - Identifiant de l'utilisateur
+ * @returns {Array} Liste des messages
+ */
 const getUserMessages = async (req, res) => {
   const { userId } = req.params;
   const messages = await Message.find({ to: userId }).sort({ sentAt: -1 });
   res.json(messages);
 };
 
+/**
+ * Marque un message comme lu pour un utilisateur.
+ * @route POST /api/admin/messages/:id/read
+ * @param {string} id - Identifiant du message
+ * @param {string} userId - Identifiant de l'utilisateur
+ * @returns {Object} Message de confirmation
+ */
 const markAsRead = async (req, res) => {
   const { id } = req.params;
   const { userId } = req.body;
@@ -434,6 +593,11 @@ const markAsRead = async (req, res) => {
   res.json({ message: 'Message marqué comme lu.' });
 };
 
+/**
+ * Récupère la boîte de réception de l'admin (messages reçus).
+ * @route GET /api/admin/inbox
+ * @returns {Array} Liste des messages reçus
+ */
 const getInbox = async (req, res) => {
   try {
     const adminId = req.user._id;

@@ -1,3 +1,7 @@
+/**
+ * Point d'entrée du serveur Node.js.
+ * Initialise la connexion à la base de données et démarre l'application Express sur le port défini.
+ */
 // server.js
 const app = require('./app');
 const connectDB = require('./config/db');

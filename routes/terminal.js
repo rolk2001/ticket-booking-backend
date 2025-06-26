@@ -1,3 +1,6 @@
+/**
+ * Routes pour la gestion des terminaux de départ et d'arrivée.
+ */
 // routes/terminal.js
 const express = require('express');
 const router = express.Router();

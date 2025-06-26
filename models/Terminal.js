@@ -1,3 +1,10 @@
+/**
+ * Modèle Mongoose pour les terminaux de départ/arrivée.
+ * @typedef {Object} Terminal
+ * @property {String} nom - Nom du terminal
+ * @property {String} ville - Ville du terminal
+ * @property {String} adresse - Adresse du terminal
+ */
 // models/Terminal.js
 const mongoose = require('mongoose');
 

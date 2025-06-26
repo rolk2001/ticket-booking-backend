@@ -1,3 +1,11 @@
+/**
+ * Envoie un email contenant un code OTP à l'utilisateur pour la vérification d'email.
+ * Utilise Nodemailer et les variables d'environnement pour l'authentification Gmail.
+ * @async
+ * @function sendOtpMail
+ * @param {string} email - Adresse email du destinataire
+ * @param {string} otp - Code OTP à envoyer
+ */
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({

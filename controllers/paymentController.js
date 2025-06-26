@@ -1,3 +1,7 @@
+/**
+ * Contrôleur pour la gestion des paiements et de l'intégration NotchPay.
+ * Gère l'initiation, la réception de webhook et la génération de tickets.
+ */
 // controllers/paymentController.js
 const axios = require('axios');
 const Payment = require('../models/Payment');
@@ -6,12 +10,22 @@ const Schedule = require('../models/Schedule');
 const Ticket = require('../models/Ticket');
 const qrcode = require('qrcode');
 
-// Simuler le paiement et générer le ticket
+/**
+ * (Obsolète) Simule le paiement et la génération de ticket.
+ * @route POST /api/payments/process
+ * @deprecated
+ * @returns {Object} Message d'erreur indiquant que la route n'est plus utilisée
+ */
 exports.processPayment = async (req, res) => {
   // Cette fonction est maintenant obsolète, nous utilisons le webhook
   res.status(404).json({ message: "Cette route n'est plus utilisée." });
 };
 
+/**
+ * Gère le webhook NotchPay pour la confirmation de paiement et la génération du ticket.
+ * @route POST /api/payments/notchpay-webhook
+ * @returns {Object} Statut de traitement du webhook
+ */
 exports.handleNotchPayWebhook = async (req, res) => {
   console.log('Webhook NotchPay reçu !', req.body);
 
@@ -124,6 +138,12 @@ exports.handleNotchPayWebhook = async (req, res) => {
   res.status(200).send('Webhook reçu avec succès.');
 };
 
+/**
+ * Initialise un paiement NotchPay pour une réservation donnée.
+ * @route POST /api/payments/initiate
+ * @param {string} reservationId - Identifiant de la réservation
+ * @returns {Object} URL d'autorisation NotchPay ou message d'erreur
+ */
 exports.initiatePayment = async (req, res) => {
   console.log('=== DÉBUT initiatePayment ===');
   console.log('Body reçu:', req.body);
