@@ -1,7 +1,12 @@
 /**
  * @file paymentController.js
+ * @module controllers/paymentController
  * @brief Contrôleur pour la gestion des paiements et de l'intégration NotchPay.
- * Gère l'initiation, la réception de webhook et la génération de tickets.
+ * @description Gère l'initiation, la réception de webhook et la génération de tickets. Toutes les fonctions sont asynchrones et renvoient des réponses JSON.
+ *
+ * @author UV PROJET CODE Team
+ * @version 1.0
+ * @date 2024-06-01
  */
 // controllers/paymentController.js
 const axios = require('axios');

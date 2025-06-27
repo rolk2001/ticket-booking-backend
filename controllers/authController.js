@@ -1,5 +1,6 @@
 /**
  * @file authController.js
+ * @module controllers/authController
  * @brief Contrôleur d'authentification pour la gestion des utilisateurs : inscription, connexion, OTP, et mise à jour du profil. Gère aussi la vérification d'email via OTP.
  */
 // controllers/authController.js

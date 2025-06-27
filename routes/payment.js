@@ -1,6 +1,12 @@
 /**
  * @file payment.js
+ * @module routes/payment
  * @brief Routes pour l'initiation des paiements et la gestion des webhooks de paiement.
+ * @description Permet d'initier un paiement et de gérer les webhooks NotchPay via l'API REST.
+ *
+ * @author UV PROJET CODE Team
+ * @version 1.0
+ * @date 2024-06-01
  * @route POST /api/payment/initiate-payment Initie un paiement (protégée)
  * @route POST /api/payment/notchpay-webhook Webhook NotchPay (non protégée)
  */

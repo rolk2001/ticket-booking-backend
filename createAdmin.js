@@ -1,6 +1,20 @@
 /**
- * Script utilitaire pour créer un utilisateur administrateur par défaut dans la base de données.
- * À lancer manuellement pour initialiser un compte admin.
+ * @file createAdmin.js
+ * @brief Script utilitaire pour créer un utilisateur administrateur par défaut dans la base de données.
+ * @description À lancer manuellement pour initialiser un compte admin. Utilise Mongoose pour la connexion et Bcrypt pour le hash du mot de passe.
+ * @see models/User.js pour le modèle utilisateur
+ *
+ * @function createAdminUser
+ * @async
+ * @returns {Promise<void>} Une promesse qui se résout quand l'utilisateur admin est créé
+ * @throws {Error} En cas d'échec de connexion ou de création
+ * @example
+ * // Depuis la ligne de commande :
+ * node createAdmin.js
+ *
+ * @author UV PROJET CODE Team
+ * @version 1.0
+ * @date 2024-06-01
  */
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');

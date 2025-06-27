@@ -1,4 +1,19 @@
-// config/db.js
+/**
+ * @file db.js
+ * @module config/db
+ * @brief Configuration de la connexion à la base de données MongoDB avec Mongoose.
+ * @description Initialise la connexion à la base de données MongoDB à partir de l'URI stockée dans la variable d'environnement MONGODB_URI. Arrête le serveur en cas d'échec de connexion.
+ *
+ * @function connectDB
+ * @async
+ * @returns {Promise<void>} Une promesse qui se résout si la connexion est réussie
+ * @throws {Error} En cas d'échec de connexion
+ * @see https://mongoosejs.com/docs/
+ *
+ * @author UV PROJET CODE Team
+ * @version 1.0
+ * @date 2024-06-01
+ */
 const mongoose = require('mongoose');
 
 /**

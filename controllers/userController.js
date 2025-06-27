@@ -3,7 +3,13 @@ const User = require('../models/User');
 
 /**
  * @file userController.js
- * @brief Contrôleur utilisateur pour la gestion des messages et des interactions avec l'admin. Permet de récupérer, supprimer et répondre aux messages.
+ * @module controllers/userController
+ * @brief Contrôleur utilisateur pour la gestion des messages et des interactions avec l'admin.
+ * @description Permet de récupérer, supprimer et répondre aux messages. Toutes les fonctions sont asynchrones et renvoient des réponses JSON.
+ *
+ * @author UV PROJET CODE Team
+ * @version 1.0
+ * @date 2024-06-01
  */
 
 // Récupérer les messages de l'utilisateur connecté

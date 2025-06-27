@@ -10,8 +10,13 @@ const sendOtpMail = require('../utils/sendOtpMail'); // réutilise ton utilitair
 
 /**
  * @file adminController.js
+ * @module controllers/adminController
  * @brief Contrôleur administrateur pour la gestion centralisée des bus, terminaux, horaires, réservations, paiements, tickets, utilisateurs et messages.
- * Permet d'obtenir des statistiques, de gérer les entités principales et de communiquer avec les utilisateurs.
+ * @description Permet d'obtenir des statistiques, de gérer les entités principales et de communiquer avec les utilisateurs. Toutes les fonctions sont asynchrones et renvoient des réponses JSON.
+ *
+ * @author UV PROJET CODE Team
+ * @version 1.0
+ * @date 2024-06-01
  */
 
 // ===== DASHBOARD STATISTIQUES =====

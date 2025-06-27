@@ -1,6 +1,12 @@
 /**
  * @file busController.js
+ * @module controllers/busController
  * @brief Contrôleur pour la gestion des bus : ajout, modification et listing.
+ * @description Permet d'ajouter, modifier et lister les bus. Toutes les fonctions sont asynchrones et renvoient des réponses JSON.
+ *
+ * @author UV PROJET CODE Team
+ * @version 1.0
+ * @date 2024-06-01
  */
 // controllers/busController.js
 const Bus = require('../models/Bus');

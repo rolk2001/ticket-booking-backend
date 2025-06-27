@@ -1,8 +1,12 @@
 /**
  * @file reservation.js
+ * @module routes/reservation
  * @brief Routes pour la création et la consultation des réservations de tickets.
- * @route POST /api/reservation Crée une réservation (protégée)
- * @route GET /api/reservation/my-reservations Liste les réservations de l'utilisateur connecté (protégée)
+ * @description Permet de créer une réservation et de consulter les réservations de l'utilisateur connecté via l'API REST.
+ *
+ * @author UV PROJET CODE Team
+ * @version 1.0
+ * @date 2024-06-01
  */
 // routes/reservation.js
 const express = require('express');

@@ -1,9 +1,12 @@
 /**
  * @file schedule.js
+ * @module routes/schedule
  * @brief Routes pour la gestion des horaires de bus et la récupération des sièges réservés.
- * @route POST /api/schedule Crée un horaire
- * @route GET /api/schedule Liste les horaires
- * @route GET /api/schedule/:scheduleId/seats Récupère les sièges réservés pour un horaire
+ * @description Permet de créer, lister les horaires et récupérer les sièges réservés via l'API REST.
+ *
+ * @author UV PROJET CODE Team
+ * @version 1.0
+ * @date 2024-06-01
  */
 // routes/schedule.js
 const express = require('express');

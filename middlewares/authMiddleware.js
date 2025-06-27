@@ -2,14 +2,22 @@ const jwt = require('jsonwebtoken');
 
 /**
  * @file authMiddleware.js
+ * @module middlewares/authMiddleware
  * @brief Middleware d'authentification pour vérifier la présence et la validité du token JWT.
+ * @description Vérifie le token JWT dans l'en-tête Authorization, décode l'utilisateur et ajoute ses infos à req.user.
+ *
  * @function authMiddleware
  * @param {Object} req Objet requête Express
  * @param {Object} res Objet réponse Express
  * @param {Function} next Fonction de rappel pour passer au middleware suivant
  * @returns {void}
+ * @throws {Error} Si le token est manquant, mal formé ou invalide
  * @example
  * router.get('/profile', authMiddleware, controller.getProfile);
+ *
+ * @author UV PROJET CODE Team
+ * @version 1.0
+ * @date 2024-06-01
  */
 module.exports = function(req, res, next) {
   // Récupère le token depuis l'en-tête (header) de la requête.

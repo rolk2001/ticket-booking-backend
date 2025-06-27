@@ -1,10 +1,11 @@
 /**
  * @file app.js
- * @brief Fichier principal de configuration de l'application Express pour Ticket Bus CM.
  * @module app
- * @details Configure les middlewares, les routes et les options CORS pour l'API Ticket Bus CM.
+ * @brief Fichier principal de configuration de l'application Express pour Ticket Bus CM.
+ * @description Configure les middlewares, les routes, la gestion des erreurs et les options CORS pour l'API Ticket Bus CM.
  * @see server.js pour le démarrage du serveur
  * @see config/db.js pour la connexion à la base de données
+ *
  * @routes
  *   - GET /             : Test API
  *   - /api/auth         : Authentification
@@ -16,6 +17,10 @@
  *   - /api/tickets      : Tickets
  *   - /api/admin        : Administration
  *   - /api/user         : Utilisateur
+ *
+ * @author UV PROJET CODE Team
+ * @version 1.0
+ * @date 2024-06-01
  */
 // app.js
 const express = require('express');

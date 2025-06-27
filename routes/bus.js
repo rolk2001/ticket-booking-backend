@@ -1,9 +1,12 @@
 /**
  * @file bus.js
+ * @module routes/bus
  * @brief Routes pour la gestion des bus (ajout, modification, listing).
- * @route POST /api/bus Ajoute un nouveau bus
- * @route PUT /api/bus/:id Modifie un bus existant
- * @route GET /api/bus Liste tous les bus
+ * @description Permet d'ajouter, modifier et lister les bus via l'API REST.
+ *
+ * @author UV PROJET CODE Team
+ * @version 1.0
+ * @date 2024-06-01
  */
 // routes/bus.js
 const express = require('express');

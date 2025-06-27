@@ -1,7 +1,12 @@
 /**
  * @file admin.js
+ * @module routes/admin
  * @brief Routes d'administration pour la gestion centralisée des bus, terminaux, horaires, réservations, paiements, tickets, utilisateurs et messages.
- * @details Toutes les routes sont protégées par le middleware admin.
+ * @description Toutes les routes sont protégées par le middleware admin. Permet la gestion complète des entités du système Ticket Bus CM.
+ *
+ * @author UV PROJET CODE Team
+ * @version 1.0
+ * @date 2024-06-01
  * @route GET /api/admin/dashboard Statistiques du dashboard
  * @route GET/POST/PUT/DELETE /api/admin/buses Gestion des bus
  * @route GET/POST/PUT/DELETE /api/admin/terminals Gestion des terminaux

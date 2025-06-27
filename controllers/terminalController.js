@@ -1,6 +1,12 @@
 /**
  * @file terminalController.js
+ * @module controllers/terminalController
  * @brief Contrôleur pour la gestion des terminaux : ajout, modification et listing.
+ * @description Permet d'ajouter, modifier et lister les terminaux. Toutes les fonctions sont asynchrones et renvoient des réponses JSON.
+ *
+ * @author UV PROJET CODE Team
+ * @version 1.0
+ * @date 2024-06-01
  */
 // controllers/terminalController.js
 const Terminal = require('../models/Terminal');

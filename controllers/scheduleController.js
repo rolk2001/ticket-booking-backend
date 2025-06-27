@@ -1,6 +1,12 @@
 /**
  * @file scheduleController.js
+ * @module controllers/scheduleController
  * @brief Contrôleur pour la gestion des horaires : création, listing et récupération par ID.
+ * @description Permet de créer, lister et récupérer les horaires de bus. Toutes les fonctions sont asynchrones et renvoient des réponses JSON.
+ *
+ * @author UV PROJET CODE Team
+ * @version 1.0
+ * @date 2024-06-01
  */
 // controllers/scheduleController.js
 const Schedule = require('../models/Schedule');

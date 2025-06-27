@@ -1,5 +1,6 @@
 /**
  * @file Payment.js
+ * @module models/Payment
  * @brief Modèle Mongoose pour les paiements liés aux réservations.
  * @typedef {Object} Payment
  * @property {ObjectId} reservation_id Référence vers la réservation
@@ -7,8 +8,14 @@
  * @property {String} moyen Moyen de paiement (Mobile Money, NotchPay, Test)
  * @property {String} status Statut du paiement (en attente, succès, échec)
  * @property {String} transaction_id Identifiant de la transaction
+ * @property {Date} createdAt Date de création (auto-gérée par Mongoose)
+ * @property {Date} updatedAt Date de dernière modification (auto-gérée par Mongoose)
  * @example
  * const payment = new Payment({ reservation_id, montant: 10000, moyen: 'NotchPay', status: 'succès' });
+ *
+ * @author UV PROJET CODE Team
+ * @version 1.0
+ * @date 2024-06-01
  */
 // models/Payment.js
 const mongoose = require('mongoose');

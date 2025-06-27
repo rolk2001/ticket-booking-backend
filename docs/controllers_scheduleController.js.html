@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/scheduleController.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/scheduleController.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file scheduleController.js
+ * @module controllers/scheduleController
+ * @brief Contrôleur pour la gestion des horaires : création, listing et récupération par ID.
+ * @description Permet de créer, lister et récupérer les horaires de bus. Toutes les fonctions sont asynchrones et renvoient des réponses JSON.
+ *
+ * @author UV PROJET CODE Team
+ * @version 1.0
+ * @date 2024-06-01
+ */
+// controllers/scheduleController.js
+const Schedule = require('../models/Schedule');
+const Bus = require('../models/Bus');
+
+/**
+ * @brief Crée un nouvel horaire pour un bus donné.
+ * @param {Object} req Requête HTTP Express contenant les infos d'horaire.
+ * @param {Object} res Réponse HTTP Express.
+ * @returns {void}
+ * @example
+ * creerHoraire(req, res);
+ */
+exports.creerHoraire = async (req, res) => {
+  try {
+    const { bus_id, origine, destination, heure_depart, heure_arrivee, prix } = req.body;
+    
+    const bus = await Bus.findById(bus_id);
+    if (!bus) return res.status(404).json({ message: "Bus non trouvé" });
+
+    if (origine === destination) {
+      return res.status(400).json({ message: "L'origine et la destination ne peuvent pas être identiques." });
+    }
+
+    const schedule = new Schedule({
+      bus_id,
+      origine,
+      destination,
+      heure_depart,
+      heure_arrivee,
+      prix,
+      places_disponibles: bus.capacite,
+    });
+    
+    await schedule.save();
+    res.status(201).json({ message: "Horaire créé avec succès", schedule });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+/**
+ * @brief Liste tous les horaires, avec possibilité de filtrer par origine, destination et date.
+ * @param {Object} req Requête HTTP Express (query: origine, destination, date).
+ * @param {Object} res Réponse HTTP Express.
+ * @returns {void}
+ * @example
+ * listerHoraires(req, res);
+ */
+exports.listerHoraires = async (req, res) => {
+  try {
+    const { origine, destination, date } = req.query;
+    const filtre = {};
+
+    if (origine) {
+      filtre.terminal_depart = origine;
+    }
+    if (destination) {
+      filtre.terminal_arrivee = destination;
+    }
+    if (date) {
+      const debutJour = new Date(date);
+      debutJour.setHours(0, 0, 0, 0);
+
+      const finJour = new Date(date);
+      finJour.setHours(23, 59, 59, 999);
+
+      filtre.date_depart = { $gte: debutJour, $lte: finJour };
+    }
+
+    const schedules = await Schedule.find(filtre)
+      .populate('bus')
+      .populate('terminal_depart')
+      .populate('terminal_arrivee');
+      
+    res.json(schedules);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur lors de la récupération des horaires.", error: error.message });
+  }
+};
+
+/**
+ * @brief Récupère un horaire par son identifiant.
+ * @param {Object} req Requête HTTP Express (params: id).
+ * @param {Object} res Réponse HTTP Express.
+ * @returns {void}
+ * @example
+ * recupererHoraire(req, res);
+ */
+exports.recupererHoraire = async (req, res) => {
+  // ... (le reste du fichier reste inchangé)
+};
+
+// ... (on ajoutera modifier/supprimer plus tard si besoin)</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-app.html">app</a></li><li><a href="module-controllers_adminController.html">controllers/adminController</a></li><li><a href="module-controllers_authController.html">controllers/authController</a></li><li><a href="module-controllers_busController.html">controllers/busController</a></li><li><a href="module-controllers_paymentController.html">controllers/paymentController</a></li><li><a href="module-controllers_reservationController.html">controllers/reservationController</a></li><li><a href="module-controllers_scheduleController.html">controllers/scheduleController</a></li><li><a href="module-controllers_terminalController.html">controllers/terminalController</a></li><li><a href="module-controllers_ticketController.html">controllers/ticketController</a></li><li><a href="module-controllers_userController.html">controllers/userController</a></li><li><a href="module-server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#adminMiddleware">adminMiddleware</a></li><li><a href="global.html#authMiddleware">authMiddleware</a></li><li><a href="global.html#connectDB">connectDB</a></li><li><a href="global.html#createAdminUser">createAdminUser</a></li><li><a href="global.html#sendOtpMail">sendOtpMail</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Jun 27 2025 13:10:21 GMT+0100 (heure normale d’Afrique de l’Ouest)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

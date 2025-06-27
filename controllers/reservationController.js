@@ -1,6 +1,12 @@
 /**
  * @file reservationController.js
+ * @module controllers/reservationController
  * @brief Contrôleur pour la gestion des réservations : création, consultation et sièges réservés.
+ * @description Permet de créer une réservation, de consulter les réservations de l'utilisateur connecté et de récupérer les sièges réservés pour un horaire donné. Toutes les fonctions sont asynchrones et renvoient des réponses JSON.
+ *
+ * @author UV PROJET CODE Team
+ * @version 1.0
+ * @date 2024-06-01
  */
 // controllers/reservationController.js
 const Reservation = require('../models/Reservation');

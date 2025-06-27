@@ -3,7 +3,13 @@ const Reservation = require('../models/Reservation');
 
 /**
  * @file ticketController.js
+ * @module controllers/ticketController
  * @brief Contrôleur pour la gestion des tickets : récupération par réservation et sièges réservés.
+ * @description Permet de récupérer le ticket associé à une réservation et la liste des sièges réservés pour un horaire donné. Toutes les fonctions sont asynchrones et renvoient des réponses JSON.
+ *
+ * @author UV PROJET CODE Team
+ * @version 1.0
+ * @date 2024-06-01
  */
 
 /**

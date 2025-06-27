@@ -1,10 +1,12 @@
 /**
  * @file user.js
+ * @module routes/user
  * @brief Routes utilisateur pour la gestion des messages et la communication avec l'admin.
- * @details Toutes les routes sont protégées par le middleware d'authentification.
- * @route GET /api/user/messages Liste les messages de l'utilisateur
- * @route DELETE /api/user/messages/:id Supprime un message de l'utilisateur
- * @route POST /api/user/messages/reply Répondre à l'admin
+ * @description Permet à l'utilisateur de consulter, supprimer et répondre à des messages via l'API REST. Toutes les routes sont protégées par le middleware d'authentification.
+ *
+ * @author UV PROJET CODE Team
+ * @version 1.0
+ * @date 2024-06-01
  */
 const express = require('express');
 const router = express.Router();
