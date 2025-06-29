@@ -28,5 +28,7 @@ router.post('/login', authController.login);
 router.put('/profile', authMiddleware, authController.updateProfile);
 router.post('/request-signup-otp', authController.requestSignupOtp);
 router.post('/verify-otp-register', authController.verifyOtpAndRegister);
+router.post('/request-reset-otp', authController.requestResetOtp);
+router.post('/reset-password', authController.resetPassword);
 
 module.exports = router;
