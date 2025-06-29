@@ -194,3 +194,66 @@ exports.verifyOtpAndRegister = async (req, res) => {
 
   res.json({ message: "Inscription réussie !" });
 };
+
+/**
+ * Demande l'envoi d'un OTP pour la réinitialisation du mot de passe.
+ * @route POST /api/auth/request-reset-otp
+ * @param {string} email - Email pour lequel envoyer l'OTP
+ * @returns {Object} Message de succès ou d'erreur
+ */
+exports.requestResetOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "Aucun compte n'est associé à cet email." });
+    }
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+
+    await EmailVerification.findOneAndUpdate(
+      { email },
+      { otp, expiresAt },
+      { upsert: true, new: true }
+    );
+
+    await sendOtpMail(email, otp);
+
+    res.json({ message: "Code OTP envoyé à votre e-mail." });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur lors de l'envoi de l'OTP.", error: error.message });
+  }
+};
+
+/**
+ * Réinitialise le mot de passe après vérification de l'OTP.
+ * @route POST /api/auth/reset-password
+ * @param {string} email - Email à vérifier
+ * @param {string} otp - Code OTP reçu
+ * @param {string} newPassword - Nouveau mot de passe
+ * @returns {Object} Message de succès ou d'erreur
+ */
+exports.resetPassword = async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+    const record = await EmailVerification.findOne({ email });
+
+    if (!record || record.otp !== otp || record.expiresAt < new Date()) {
+      return res.status(400).json({ message: "Code OTP invalide ou expiré." });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé." });
+    }
+
+    user.mot_de_passe = await bcrypt.hash(newPassword, 10);
+    await user.save();
+
+    await EmailVerification.deleteOne({ email });
+
+    res.json({ message: "Mot de passe réinitialisé avec succès !" });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur lors de la réinitialisation.", error: error.message });
+  }
+};
