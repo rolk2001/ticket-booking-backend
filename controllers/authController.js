@@ -55,7 +55,6 @@ exports.register = async (req, res) => {
  */
 exports.login = async (req, res) => {
   console.log('--- Tentative de connexion ---');
-  console.log('Body reçu:', req.body);
   try {
     const { email, mot_de_passe } = req.body;
     
