@@ -28,6 +28,7 @@ connectDB().then(() => {
   });
 
   // Cron : suppression des réservations en attente de +30min et libération des places
+  const Ticket = require('./models/Ticket');
   cron.schedule('*/5 * * * *', async () => {
     try {
       const now = new Date();
@@ -42,6 +43,8 @@ connectDB().then(() => {
           reservation.schedule,
           { $inc: { places_disponibles: reservation.nombre_places } }
         );
+        // Supprimer les tickets associés à la réservation
+        await Ticket.deleteMany({ reservation_id: reservation._id });
         // Supprimer la réservation
         await Reservation.findByIdAndDelete(reservation._id);
         console.log(`[CRON] Réservation ${reservation._id} supprimée (non payée sous 30min)`);
