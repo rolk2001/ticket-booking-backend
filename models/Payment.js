@@ -25,7 +25,8 @@ const paymentSchema = new mongoose.Schema({
   montant: { type: Number, required: true },
   moyen: { type: String, enum: ['Mobile Money', 'NotchPay', 'Test'], default: 'Test' },
   status: { type: String, enum: ['en attente', 'succès', 'échec'], default: 'en attente' },
-  transaction_id: { type: String } // Fourni par le service de paiement
+  transaction_id: { type: String }, // Fourni par le service de paiement
+  reminderSent: { type: Boolean, default: false } // Notification "30min avant départ" envoyée ?
 }, { timestamps: true });
 
 module.exports = mongoose.model('Payment', paymentSchema);
