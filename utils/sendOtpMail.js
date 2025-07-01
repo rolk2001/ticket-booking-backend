@@ -27,11 +27,17 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-module.exports = async function sendOtpMail(email, otp) {
+/**
+ * Envoie un email générique (OTP ou message personnalisé)
+ * @param {string} email Destinataire
+ * @param {string} subject Sujet de l'email
+ * @param {string} htmlContent Contenu HTML du message
+ */
+module.exports = async function sendMail(email, subject, htmlContent) {
   await transporter.sendMail({
     from: `"Ticket Bus CM" <${process.env.GMAIL_USER}>`,
     to: email,
-    subject: "Votre code de vérification",
-    html: `<p>Votre code de vérification est : <b>${otp}</b></p>`
+    subject: subject,
+    html: htmlContent
   });
 };

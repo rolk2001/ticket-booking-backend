@@ -6,7 +6,7 @@ const Ticket = require('../models/Ticket');
 const Payment = require('../models/Payment');
 const User = require('../models/User');
 const Message = require('../models/Message');
-const sendOtpMail = require('../utils/sendOtpMail'); // réutilise ton utilitaire mail
+const sendMail = require('../utils/sendOtpMail'); // réutilise ton utilitaire mail
 
 /**
  * @file adminController.js
@@ -554,12 +554,12 @@ const sendMessage = async (req, res) => {
     // Envoi d'e-mail à chaque destinataire
     const users = await User.find({ _id: { $in: to } });
     for (const user of users) {
-      await sendOtpMail(user.email, `${subject}\n\n${body}`);
+      await sendMail(user.email, subject, `<p>${body}</p>`);
     }
 
     res.status(201).json({ message: 'Message envoyé et enregistré.' });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de l\'envoi du message.' });
+    res.status(500).json({ message: "Erreur lors de l'envoi du message." });
   }
 };
 

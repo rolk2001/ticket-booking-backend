@@ -6,7 +6,7 @@
 // controllers/authController.js
 const User = require('../models/User');
 const EmailVerification = require('../models/EmailVerification');
-const sendOtpMail = require('../utils/sendOtpMail');
+const sendMail = require('../utils/sendOtpMail');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -156,7 +156,7 @@ exports.requestSignupOtp = async (req, res) => {
     { upsert: true, new: true }
   );
 
-  await sendOtpMail(email, otp);
+  await sendMail(email, "Votre code de vérification", `<p>Votre code de vérification est : <b>${otp}</b></p>`);
 
   res.json({ message: "Code envoyé à votre e-mail." });
 };
@@ -216,7 +216,7 @@ exports.requestResetOtp = async (req, res) => {
       { upsert: true, new: true }
     );
 
-    await sendOtpMail(email, otp);
+    await sendMail(email, "Votre code de vérification", `<p>Votre code de vérification est : <b>${otp}</b></p>`);
 
     res.json({ message: "Code OTP envoyé à votre e-mail." });
   } catch (error) {
