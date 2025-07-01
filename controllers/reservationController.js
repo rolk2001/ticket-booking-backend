@@ -22,6 +22,11 @@ const QRCode = require('qrcode');
  * @example
  * creerReservation(req, res);
  */
+
+const Message = require('../models/Message');
+const User = require('../models/User');
+const sendMail = require('../utils/sendOtpMail');
+
 exports.creerReservation = async (req, res) => {
   try {
     const { schedule: scheduleId, nombre_places, seat } = req.body;
@@ -62,6 +67,24 @@ exports.creerReservation = async (req, res) => {
 
     schedule.places_disponibles -= nombre_places;
     await schedule.save();
+
+    // --- ENVOI MESSAGE AUTOMATIQUE ---
+    // Récupérer l'utilisateur
+    const user = await User.findById(userId);
+    if (user) {
+      const subject = "Confirmation de réservation";
+      const body = `Bonjour ${user.nom || ''},<br><br>Votre réservation a bien été prise en compte. Merci de procéder au paiement dans les 30 minutes, sans quoi elle sera annulée automatiquement.<br><br>Cordialement,<br>L’équipe Ticket Bus CM`;
+      // Message interne
+      const message = new Message({
+        to: [userId],
+        from: null, // ou l'ID admin si tu veux
+        subject,
+        body,
+      });
+      await message.save();
+      // Email
+      await sendMail(user.email, subject, body);
+    }
 
     res.status(201).json({ message: "Réservation créée avec succès", reservation, ticket });
   } catch (error) {
