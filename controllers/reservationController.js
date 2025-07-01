@@ -73,17 +73,18 @@ exports.creerReservation = async (req, res) => {
     const user = await User.findById(userId);
     if (user) {
       const subject = "Confirmation de réservation";
-      const body = `Bonjour ${user.nom || ''},<br><br>Votre réservation a bien été prise en compte. Merci de procéder au paiement dans les 30 minutes, sans quoi elle sera annulée automatiquement.<br><br>Cordialement,<br>L’équipe Ticket Bus CM`;
+      const bodyText = `Bonjour ${user.nom || ''},\n\nVotre réservation a bien été prise en compte. Merci de procéder au paiement dans les 30 minutes, sans quoi elle sera annulée automatiquement.\n\nCordialement,\nL’équipe Ticket Bus CM`;
+      const bodyHtml = bodyText.replace(/\n/g, '<br>');
       // Message interne
       const message = new Message({
         to: [userId],
-        from: null, // ou l'ID admin si tu veux
+        from: null,
         subject,
-        body,
+        body: bodyText,
       });
       await message.save();
       // Email
-      await sendMail(user.email, subject, body);
+      await sendMail(user.email, subject, bodyHtml);
     }
 
     res.status(201).json({ message: "Réservation créée avec succès", reservation, ticket });
