@@ -50,9 +50,23 @@ exports.creerReservation = async (req, res) => {
     });
     await reservation.save();
 
-    // Générer le QR code avec le nom de la compagnie
-    const compagnie = schedule.bus?.compagnie || 'COMPAGNIE';
-    const qrText = `${compagnie}.cm`;
+
+    // Récupérer l'utilisateur pour le QR code
+    const user = await User.findById(userId);
+    // Date de paiement = date de création du ticket (sera créée juste après)
+    // Date de départ = schedule.date_depart
+    // Numéro de siège = seat
+    // Email = user.email
+    // Nom = user.nom
+    // On prépare un objet JSON pour le QR code
+    const qrPayload = {
+      nom: user?.nom || '',
+      email: user?.email || '',
+      siege: seat || 'Non assigné',
+      datePaiement: new Date().toISOString(),
+      dateDepart: schedule.date_depart ? new Date(schedule.date_depart).toISOString() : '',
+    };
+    const qrText = JSON.stringify(qrPayload);
     const qr_code = await QRCode.toDataURL(qrText);
 
     // Créer le ticket avec le QR code
@@ -69,8 +83,6 @@ exports.creerReservation = async (req, res) => {
     await schedule.save();
 
     // --- ENVOI MESSAGE AUTOMATIQUE ---
-    // Récupérer l'utilisateur
-    const user = await User.findById(userId);
     if (user) {
       const subject = "Confirmation de réservation";
       const bodyText = `Bonjour ${user.nom || ''},\n\nVotre réservation a bien été prise en compte. Merci de procéder au paiement dans les 30 minutes, sans quoi elle sera annulée automatiquement.\n\nCordialement,\nL’équipe Ticket Bus CM`;
