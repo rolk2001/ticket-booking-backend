@@ -386,17 +386,36 @@ const updateReservationStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { statut } = req.body;
-    
+
     const reservation = await Reservation.findByIdAndUpdate(
-      id, 
-      { statut }, 
+      id,
+      { statut },
       { new: true }
     ).populate('user schedule');
-    
+
     if (!reservation) {
       return res.status(404).json({ message: 'Réservation non trouvée' });
     }
-    
+
+    // === Création automatique du Payment si statut devient "confirmée" ===
+    if (statut === 'confirmée') {
+      const existingPayment = await Payment.findOne({ reservation_id: reservation._id });
+      if (!existingPayment) {
+        // On peut adapter le montant selon la logique métier (ici prix du schedule * nombre_places)
+        let montant = 0;
+        if (reservation.schedule && reservation.schedule.prix && reservation.nombre_places) {
+          montant = reservation.schedule.prix * reservation.nombre_places;
+        }
+        const payment = new Payment({
+          reservation_id: reservation._id,
+          montant,
+          moyen: 'Test', // À adapter si besoin
+          status: 'succès',
+        });
+        await payment.save();
+      }
+    }
+
     res.json(reservation);
   } catch (error) {
     console.error('Erreur updateReservationStatus:', error);
