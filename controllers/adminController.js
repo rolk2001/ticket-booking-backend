@@ -6,7 +6,7 @@ const Ticket = require('../models/Ticket');
 const Payment = require('../models/Payment');
 const User = require('../models/User');
 const Message = require('../models/Message');
-const sendMail = require('../utils/sendOtpMail'); // réutilise ton utilitaire mail
+const sendMail = require('../utils/sendOtpMail'); 
 
 /**
  * @file adminController.js
