@@ -56,4 +56,56 @@ connectDB().then(() => {
       console.error('[CRON] Erreur suppression réservations expirées :', err.message);
     }
   });
+
+  // === CRON : Notification 30min avant départ ===
+  const Payment = require('./models/Payment');
+  const Message = require('./models/Message');
+  const User = require('./models/User');
+  const sendMail = require('./utils/sendOtpMail');
+  cron.schedule('*/5 * * * *', async () => {
+    try {
+      const now = new Date();
+      // Fenêtre de 5 minutes autour de 30min avant départ
+      const minDate = new Date(now.getTime() + 30 * 60 * 1000 - 2.5 * 60 * 1000); // 27.5min
+      const maxDate = new Date(now.getTime() + 30 * 60 * 1000 + 2.5 * 60 * 1000); // 32.5min
+
+      // On ne traite que les paiements "succès" et pas encore notifiés
+      const payments = await Payment.find({ status: 'succès', reminderSent: false }).populate({
+        path: 'reservation_id',
+        populate: { path: 'schedule user' }
+      });
+
+      for (const payment of payments) {
+        const reservation = payment.reservation_id;
+        if (!reservation || !reservation.schedule || !reservation.user) continue;
+        const schedule = reservation.schedule;
+        const user = reservation.user;
+        // On suppose que le champ de date de départ est "heure_depart" ou "date_depart"
+        const departDate = schedule.heure_depart || schedule.date_depart;
+        if (!departDate) continue;
+        const departTime = new Date(departDate);
+        if (departTime >= minDate && departTime <= maxDate) {
+          // Message interne
+          const subject = "Préparez-vous pour votre voyage !";
+          const bodyText = `Bonjour ${user.nom || ''},\n\nVotre bus partira à ${departTime.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' })}. Merci de vous préparer à l'avance et d'arriver au terminal à l'heure.\n\nBon voyage !\nL'équipe Ticket Bus CM`;
+          const bodyHtml = bodyText.replace(/\n/g, '<br>');
+          const message = new Message({
+            to: [user._id],
+            from: null,
+            subject,
+            body: bodyText
+          });
+          await message.save();
+          // Email
+          await sendMail(user.email, subject, bodyHtml);
+          // Marquer comme notifié
+          payment.reminderSent = true;
+          await payment.save();
+          console.log(`[CRON] Notification "30min avant départ" envoyée à ${user.email} pour réservation ${reservation._id}`);
+        }
+      }
+    } catch (err) {
+      console.error('[CRON] Erreur notification 30min avant départ :', err.message);
+    }
+  });
 });
