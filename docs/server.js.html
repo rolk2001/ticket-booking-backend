@@ -41,14 +41,100 @@
 // server.js
 const app = require('./app');
 const connectDB = require('./config/db');
+const Schedule = require('./models/Schedule');
+const cron = require('node-cron');
 require('dotenv').config();
 
 const PORT = process.env.PORT || 5000;
 
 // Connexion à la base de données puis démarrage du serveur
+const Reservation = require('./models/Reservation');
+
 connectDB().then(() => {
   app.listen(PORT, () => {
     console.log(`🚀 Serveur prêt et à l'écoute sur le port ${PORT}`);
+  });
+
+  // Cron : suppression des réservations en attente de +30min et libération des places
+  const Ticket = require('./models/Ticket');
+  cron.schedule('*/5 * * * *', async () => {
+    try {
+      const now = new Date();
+      const threshold = new Date(now.getTime() - 30 * 60 * 1000); // 30 minutes avant maintenant
+      const expiredReservations = await Reservation.find({
+        statut: 'en_attente',
+        createdAt: { $lte: threshold }
+      });
+      for (const reservation of expiredReservations) {
+        // Libérer les places dans le schedule
+        await Schedule.findByIdAndUpdate(
+          reservation.schedule,
+          { $inc: { places_disponibles: reservation.nombre_places } }
+        );
+        // Supprimer les tickets associés à la réservation
+        await Ticket.deleteMany({ reservation_id: reservation._id });
+        // Supprimer la réservation
+        await Reservation.findByIdAndDelete(reservation._id);
+        console.log(`[CRON] Réservation ${reservation._id} supprimée (non payée sous 30min)`);
+      }
+      if (expiredReservations.length > 0) {
+        console.log(`[CRON] Total réservations supprimées : ${expiredReservations.length}`);
+      }
+    } catch (err) {
+      console.error('[CRON] Erreur suppression réservations expirées :', err.message);
+    }
+  });
+
+  // === CRON : Notification 30min avant départ ===
+  const Payment = require('./models/Payment');
+  const Message = require('./models/Message');
+  const User = require('./models/User');
+  const sendMail = require('./utils/sendOtpMail');
+  cron.schedule('*/5 * * * *', async () => {
+    try {
+      const now = new Date();
+      // Fenêtre de 5 minutes autour de 30min avant départ
+      const minDate = new Date(now.getTime() + 30 * 60 * 1000 - 2.5 * 60 * 1000); // 27.5min
+      const maxDate = new Date(now.getTime() + 30 * 60 * 1000 + 2.5 * 60 * 1000); // 32.5min
+
+      // On ne traite que les paiements "succès" et pas encore notifiés
+      const payments = await Payment.find({ status: 'succès', reminderSent: false }).populate({
+        path: 'reservation_id',
+        populate: { path: 'schedule user' }
+      });
+
+      for (const payment of payments) {
+        const reservation = payment.reservation_id;
+        if (!reservation || !reservation.schedule || !reservation.user) continue;
+        const schedule = reservation.schedule;
+        const user = reservation.user;
+        // On suppose que le champ de date de départ est "heure_depart" ou "date_depart"
+        const departDate = schedule.heure_depart || schedule.date_depart;
+        if (!departDate) continue;
+        const departTime = new Date(departDate);
+        if (departTime >= minDate &amp;&amp; departTime &lt;= maxDate) {
+          // Message interne
+          const subject = "Préparez-vous pour votre voyage !";
+          const bodyText = `Bonjour ${user.nom || ''},\n\nVotre bus partira à ${departTime.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' })}. Merci de vous préparer à l'avance et d'arriver au terminal à l'heure car le départ est dans 30 minutes.\n\nBon voyage !\nL'équipe Ticket Bus CM`;
+          const bodyHtml = bodyText.replace(/\n/g, '&lt;br>');
+          const message = new Message({
+            to: [user._id],
+            from: null,
+            subject,
+            body: bodyText
+          });
+          await message.save();
+          // Email
+          await sendMail(user.email, subject, bodyHtml);
+          // Marquer comme notifié
+          payment.reminderSent = true;
+          await payment.save();
+          console.log(`[CRON] Notification "30min avant départ" envoyée à ${user.email} pour réservation ${reservation._id}`);
+        }
+      }
+    } catch (err) {
+      console.error('[CRON] Erreur notification 30min avant départ :', err.message);
+    }
   });
 });</code></pre>
         </article>
@@ -60,13 +146,13 @@ connectDB().then(() => {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-app.html">app</a></li><li><a href="module-controllers_adminController.html">controllers/adminController</a></li><li><a href="module-controllers_authController.html">controllers/authController</a></li><li><a href="module-controllers_busController.html">controllers/busController</a></li><li><a href="module-controllers_paymentController.html">controllers/paymentController</a></li><li><a href="module-controllers_reservationController.html">controllers/reservationController</a></li><li><a href="module-controllers_scheduleController.html">controllers/scheduleController</a></li><li><a href="module-controllers_terminalController.html">controllers/terminalController</a></li><li><a href="module-controllers_ticketController.html">controllers/ticketController</a></li><li><a href="module-controllers_userController.html">controllers/userController</a></li><li><a href="module-server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#adminMiddleware">adminMiddleware</a></li><li><a href="global.html#authMiddleware">authMiddleware</a></li><li><a href="global.html#connectDB">connectDB</a></li><li><a href="global.html#createAdminUser">createAdminUser</a></li><li><a href="global.html#sendOtpMail">sendOtpMail</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-app.html">app</a></li><li><a href="module-controllers_adminController.html">controllers/adminController</a></li><li><a href="module-controllers_authController.html">controllers/authController</a></li><li><a href="module-controllers_busController.html">controllers/busController</a></li><li><a href="module-controllers_paymentController.html">controllers/paymentController</a></li><li><a href="module-controllers_reservationController.html">controllers/reservationController</a></li><li><a href="module-controllers_scheduleController.html">controllers/scheduleController</a></li><li><a href="module-controllers_terminalController.html">controllers/terminalController</a></li><li><a href="module-controllers_ticketController.html">controllers/ticketController</a></li><li><a href="module-controllers_userController.html">controllers/userController</a></li><li><a href="module-server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#connectDB">connectDB</a></li><li><a href="global.html#createAdminUser">createAdminUser</a></li><li><a href="global.html#sendOtpMail">sendOtpMail</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Jun 27 2025 13:10:21 GMT+0100 (heure normale d’Afrique de l’Ouest)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Jul 02 2025 21:03:19 GMT+0100 (heure normale d’Afrique de l’Ouest)
 </footer>
 
 <script> prettyPrint(); </script>

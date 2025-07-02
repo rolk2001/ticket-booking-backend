@@ -22,8 +22,26 @@ const sendMail = require('../utils/sendOtpMail');
 // ===== DASHBOARD STATISTIQUES =====
 /**
  * Récupère les statistiques du dashboard admin (bus, terminaux, réservations, revenus, etc.).
- * @route GET /api/admin/dashboard
- * @returns {Object} Statistiques et réservations récentes
+ *
+ * @function getDashboardStats
+ * @memberof module:controllers/adminController
+ * @param {Express.Request} req - Requête HTTP Express.
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise<void>} Réponse JSON contenant les statistiques et réservations récentes ou un message d'erreur.
+ *
+ * @throws {500} Si une erreur survient lors de la récupération.
+ *
+ * @example
+ * // Appel depuis une route Express
+ * router.get('/admin/dashboard', getDashboardStats);
+ *
+ * @see module:models/Bus
+ * @see module:models/Terminal
+ * @see module:models/Schedule
+ * @see module:models/Reservation
+ * @see module:models/Ticket
+ * @see module:models/Payment
+ * @see module:models/User
  */
 const getDashboardStats = async (req, res) => {
   try {
@@ -68,8 +86,20 @@ const getDashboardStats = async (req, res) => {
 // ===== GESTION DES BUS =====
 /**
  * Liste tous les bus.
- * @route GET /api/admin/buses
- * @returns {Array} Liste des bus
+ *
+ * @function getAllBuses
+ * @memberof module:controllers/adminController
+ * @param {Express.Request} req - Requête HTTP Express.
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise<void>} Réponse JSON contenant la liste des bus ou un message d'erreur.
+ *
+ * @throws {500} Si une erreur survient lors de la récupération.
+ *
+ * @example
+ * // Appel depuis une route Express
+ * router.get('/admin/buses', getAllBuses);
+ *
+ * @see module:models/Bus
  */
 const getAllBuses = async (req, res) => {
   try {
@@ -83,12 +113,20 @@ const getAllBuses = async (req, res) => {
 
 /**
  * Crée un nouveau bus.
- * @route POST /api/admin/buses
- * @param {string} numero - Numéro du bus
- * @param {number} capacite - Capacité du bus
- * @param {string} compagnie - Compagnie du bus
- * @param {string} type_bus - Type de bus
- * @returns {Object} Bus créé
+ *
+ * @function createBus
+ * @memberof module:controllers/adminController
+ * @param {Express.Request} req - Requête HTTP Express (body: numero, capacite, compagnie, type_bus).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise<void>} Réponse JSON contenant le bus créé ou un message d'erreur.
+ *
+ * @throws {500} Si une erreur survient lors de la création.
+ *
+ * @example
+ * // Appel depuis une route Express
+ * router.post('/admin/buses', createBus);
+ *
+ * @see module:models/Bus
  */
 const createBus = async (req, res) => {
   try {

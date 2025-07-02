@@ -15,12 +15,28 @@ const Ticket = require('../models/Ticket');
 const QRCode = require('qrcode');
 
 /**
- * @brief Crée une nouvelle réservation et génère un ticket avec QR code.
- * @param {Object} req Requête HTTP Express (body: schedule, nombre_places, seat).
- * @param {Object} res Réponse HTTP Express.
- * @returns {void}
+ * Crée une nouvelle réservation et génère un ticket avec QR code.
+ *
+ * @function creerReservation
+ * @memberof module:controllers/reservationController
+ * @param {Express.Request} req - Requête HTTP Express (body: schedule, nombre_places, seat). L'utilisateur doit être authentifié (req.user.userId).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise<void>} Réponse JSON contenant la réservation et le ticket généré, ou un message d'erreur.
+ *
+ * @throws {404} Si l'horaire n'est pas trouvé.
+ * @throws {400} Si pas assez de places disponibles.
+ * @throws {500} Si une erreur survient lors de la création.
+ *
  * @example
- * creerReservation(req, res);
+ * // Appel depuis une route Express
+ * router.post('/reservation', creerReservation);
+ *
+ * @see module:models/Reservation
+ * @see module:models/Ticket
+ * @see module:models/Schedule
+ * @see module:models/User
+ * @see module:models/Message
+ * @see module:utils/sendOtpMail
  */
 
 const Message = require('../models/Message');
@@ -106,12 +122,21 @@ exports.creerReservation = async (req, res) => {
 };
 
 /**
- * @brief Récupère les réservations de l'utilisateur connecté.
- * @param {Object} req Requête HTTP Express.
- * @param {Object} res Réponse HTTP Express.
- * @returns {void}
+ * Récupère les réservations de l'utilisateur connecté.
+ *
+ * @function mesReservations
+ * @memberof module:controllers/reservationController
+ * @param {Express.Request} req - Requête HTTP Express (utilisateur authentifié).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise<void>} Réponse JSON contenant la liste des réservations ou un message d'erreur.
+ *
+ * @throws {500} Si une erreur survient lors de la récupération.
+ *
  * @example
- * mesReservations(req, res);
+ * // Appel depuis une route Express
+ * router.get('/mes-reservations', mesReservations);
+ *
+ * @see module:models/Reservation
  */
 exports.mesReservations = async (req, res) => {
   try {
@@ -134,12 +159,21 @@ exports.mesReservations = async (req, res) => {
 };
 
 /**
- * @brief Récupère la liste des sièges réservés pour un horaire donné.
- * @param {Object} req Requête HTTP Express (params: scheduleId).
- * @param {Object} res Réponse HTTP Express.
- * @returns {void}
+ * Récupère la liste des sièges réservés pour un horaire donné.
+ *
+ * @function getReservedSeats
+ * @memberof module:controllers/reservationController
+ * @param {Express.Request} req - Requête HTTP Express (params: scheduleId).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise<void>} Réponse JSON contenant la liste des sièges réservés ou un message d'erreur.
+ *
+ * @throws {500} Si une erreur survient lors de la récupération.
+ *
  * @example
- * getReservedSeats(req, res);
+ * // Appel depuis une route Express
+ * router.get('/reserved-seats/:scheduleId', getReservedSeats);
+ *
+ * @see module:models/Ticket
  */
 exports.getReservedSeats = async (req, res) => {
   try {

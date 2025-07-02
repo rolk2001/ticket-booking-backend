@@ -154,12 +154,16 @@
     
 
     
-    <h4 class="name" id=".ajouterBus"><span class="type-signature">(static) </span>ajouterBus<span class="signature">(numero, capacite, compagnie, type_bus, status)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id=".ajouterBus"><span class="type-signature">(static) </span>ajouterBus<span class="signature">(req, res)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></h4>
     
 
     
 
 
+
+<div class="description">
+    Ajoute un nouveau bus.
+</div>
 
 
 
@@ -194,13 +198,13 @@
 
         <tr>
             
-                <td class="name"><code>numero</code></td>
+                <td class="name"><code>req</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">Express.Request</span>
 
 
             
@@ -210,20 +214,20 @@
 
             
 
-            <td class="description last">Numéro du bus</td>
+            <td class="description last">Requête HTTP Express (body: numero, capacite, compagnie, type_bus, status).</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>capacite</code></td>
+                <td class="name"><code>res</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">Express.Response</span>
 
 
             
@@ -233,76 +237,7 @@
 
             
 
-            <td class="description last">Capacité du bus</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>compagnie</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Compagnie du bus</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>type_bus</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Type de bus</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>status</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Statut du bus (optionnel)</td>
+            <td class="description last">Réponse HTTP Express.</td>
         </tr>
 
     
@@ -343,12 +278,19 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controllers_busController.js.html">controllers/busController.js</a>, <a href="controllers_busController.js.html#line24">line 24</a>
+        <a href="controllers_busController.js.html">controllers/busController.js</a>, <a href="controllers_busController.js.html#line14">line 14</a>
     </li></ul></dd>
     
 
     
 
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>module:models/Bus</li>
+        </ul>
+    </dd>
     
 
     
@@ -366,13 +308,69 @@
 
 
 
+<h5>Throws:</h5>
+<ul>
+        <li>
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        Si un champ obligatoire est manquant.
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">400</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+</li>
+    
+        <li>
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        Si une erreur survient lors de l'ajout.
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">500</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+</li>
+    </ul>
 
 
 <h5>Returns:</h5>
 
         
 <div class="param-desc">
-    Message de succès ou d'erreur
+    Réponse JSON avec message de succès ou d'erreur.
 </div>
 
 
@@ -383,7 +381,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Object</span>
+<span class="param-type">Promise.&lt;void></span>
 
 
     </dd>
@@ -394,6 +392,12 @@
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Appel depuis une route Express
+router.post('/bus', ajouterBus);</code></pre>
+
+
 
         
             
@@ -401,118 +405,16 @@
     
 
     
-    <h4 class="name" id=".listerBus"><span class="type-signature">(static) </span>listerBus<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id=".listerBus"><span class="type-signature">(static) </span>listerBus<span class="signature">(req, res)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></h4>
     
 
     
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controllers_busController.js.html">controllers/busController.js</a>, <a href="controllers_busController.js.html#line60">line 60</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    Liste des bus
+<div class="description">
+    Liste tous les bus.
 </div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id=".modifierBus"><span class="type-signature">(static) </span>modifierBus<span class="signature">(id)</span><span class="type-signature"> &rarr; {Object}</span></h4>
-    
-
-    
-
-
 
 
 
@@ -547,13 +449,13 @@
 
         <tr>
             
-                <td class="name"><code>id</code></td>
+                <td class="name"><code>req</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">Express.Request</span>
 
 
             
@@ -563,7 +465,30 @@
 
             
 
-            <td class="description last">Identifiant du bus à modifier</td>
+            <td class="description last">Requête HTTP Express.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>res</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Express.Response</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Réponse HTTP Express.</td>
         </tr>
 
     
@@ -604,12 +529,19 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controllers_busController.js.html">controllers/busController.js</a>, <a href="controllers_busController.js.html#line44">line 44</a>
+        <a href="controllers_busController.js.html">controllers/busController.js</a>, <a href="controllers_busController.js.html#line75">line 75</a>
     </li></ul></dd>
     
 
     
 
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>module:models/Bus</li>
+        </ul>
+    </dd>
     
 
     
@@ -627,13 +559,42 @@
 
 
 
+<h5>Throws:</h5>
+
+        
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        Si une erreur survient lors de la récupération.
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">500</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+
+    
 
 
 <h5>Returns:</h5>
 
         
 <div class="param-desc">
-    Message de succès ou d'erreur
+    Réponse JSON contenant la liste des bus ou un message d'erreur.
 </div>
 
 
@@ -644,7 +605,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Object</span>
+<span class="param-type">Promise.&lt;void></span>
 
 
     </dd>
@@ -653,6 +614,263 @@
     
 
 
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Appel depuis une route Express
+router.get('/bus', listerBus);</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".modifierBus"><span class="type-signature">(static) </span>modifierBus<span class="signature">(req, res)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Modifie un bus existant.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>req</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Express.Request</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Requête HTTP Express (params: id, body: champs à modifier).</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>res</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Express.Response</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Réponse HTTP Express.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_busController.js.html">controllers/busController.js</a>, <a href="controllers_busController.js.html#line46">line 46</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>module:models/Bus</li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Throws:</h5>
+<ul>
+        <li>
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        Si le bus n'est pas trouvé.
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">404</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+</li>
+    
+        <li>
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        Si une erreur survient lors de la modification.
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">500</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+</li>
+    </ul>
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Réponse JSON avec message de succès ou d'erreur.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;void></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Appel depuis une route Express
+router.put('/bus/:id', modifierBus);</code></pre>
 
 
 
@@ -672,13 +890,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-app.html">app</a></li><li><a href="module-controllers_adminController.html">controllers/adminController</a></li><li><a href="module-controllers_authController.html">controllers/authController</a></li><li><a href="module-controllers_busController.html">controllers/busController</a></li><li><a href="module-controllers_paymentController.html">controllers/paymentController</a></li><li><a href="module-controllers_reservationController.html">controllers/reservationController</a></li><li><a href="module-controllers_scheduleController.html">controllers/scheduleController</a></li><li><a href="module-controllers_terminalController.html">controllers/terminalController</a></li><li><a href="module-controllers_ticketController.html">controllers/ticketController</a></li><li><a href="module-controllers_userController.html">controllers/userController</a></li><li><a href="module-server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#adminMiddleware">adminMiddleware</a></li><li><a href="global.html#authMiddleware">authMiddleware</a></li><li><a href="global.html#connectDB">connectDB</a></li><li><a href="global.html#createAdminUser">createAdminUser</a></li><li><a href="global.html#sendOtpMail">sendOtpMail</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-app.html">app</a></li><li><a href="module-controllers_adminController.html">controllers/adminController</a></li><li><a href="module-controllers_authController.html">controllers/authController</a></li><li><a href="module-controllers_busController.html">controllers/busController</a></li><li><a href="module-controllers_paymentController.html">controllers/paymentController</a></li><li><a href="module-controllers_reservationController.html">controllers/reservationController</a></li><li><a href="module-controllers_scheduleController.html">controllers/scheduleController</a></li><li><a href="module-controllers_terminalController.html">controllers/terminalController</a></li><li><a href="module-controllers_ticketController.html">controllers/ticketController</a></li><li><a href="module-controllers_userController.html">controllers/userController</a></li><li><a href="module-server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#connectDB">connectDB</a></li><li><a href="global.html#createAdminUser">createAdminUser</a></li><li><a href="global.html#sendOtpMail">sendOtpMail</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Jun 27 2025 13:10:21 GMT+0100 (heure normale d’Afrique de l’Ouest)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Jul 02 2025 21:03:19 GMT+0100 (heure normale d’Afrique de l’Ouest)
 </footer>
 
 <script> prettyPrint(); </script>

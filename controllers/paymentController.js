@@ -17,13 +17,18 @@ const Ticket = require('../models/Ticket');
 const qrcode = require('qrcode');
 
 /**
- * @brief (Obsolète) Simule le paiement et la génération de ticket.
- * @param {Object} req Requête HTTP Express.
- * @param {Object} res Réponse HTTP Express.
- * @returns {void}
+ * (Obsolète) Simule le paiement et la génération de ticket.
+ *
+ * @function processPayment
+ * @memberof module:controllers/paymentController
+ * @param {Express.Request} req - Requête HTTP Express.
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise<void>} Réponse JSON d'erreur (cette route n'est plus utilisée).
  * @deprecated
+ *
  * @example
- * processPayment(req, res);
+ * // Appel depuis une route Express
+ * router.post('/payment/process', processPayment);
  */
 exports.processPayment = async (req, res) => {
   // Cette fonction est maintenant obsolète, nous utilisons le webhook
@@ -31,12 +36,25 @@ exports.processPayment = async (req, res) => {
 };
 
 /**
- * @brief Gère le webhook NotchPay pour la confirmation de paiement et la génération du ticket.
- * @param {Object} req Requête HTTP Express.
- * @param {Object} res Réponse HTTP Express.
- * @returns {void}
+ * Gère le webhook NotchPay pour la confirmation de paiement et la génération du ticket.
+ *
+ * @function handleNotchPayWebhook
+ * @memberof module:controllers/paymentController
+ * @param {Express.Request} req - Requête HTTP Express (webhook NotchPay).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise<void>} Réponse JSON selon le traitement du paiement.
+ *
+ * @throws {400} Si la référence de marchand est manquante.
+ * @throws {404} Si la réservation n'est pas trouvée.
+ * @throws {500} Si une erreur survient lors du traitement du paiement.
+ *
  * @example
- * handleNotchPayWebhook(req, res);
+ * // Appel depuis une route Express
+ * router.post('/payment/webhook', handleNotchPayWebhook);
+ *
+ * @see module:models/Payment
+ * @see module:models/Reservation
+ * @see module:models/Ticket
  */
 exports.handleNotchPayWebhook = async (req, res) => {
   console.log('Webhook NotchPay reçu !', req.body);

@@ -15,8 +15,20 @@ const User = require('../models/User');
 // Récupérer les messages de l'utilisateur connecté
 /**
  * Récupère les messages de l'utilisateur connecté.
- * @route GET /api/user/messages
- * @returns {Array} Liste des messages reçus par l'utilisateur
+ *
+ * @function getMyMessages
+ * @memberof module:controllers/userController
+ * @param {Express.Request} req - Requête HTTP Express (utilisateur authentifié).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise<void>} Réponse JSON contenant la liste des messages reçus ou un message d'erreur.
+ *
+ * @throws {500} Si une erreur survient lors de la récupération.
+ *
+ * @example
+ * // Appel depuis une route Express
+ * router.get('/user/messages', getMyMessages);
+ *
+ * @see module:models/Message
  */
 exports.getMyMessages = async (req, res) => {
   try {
@@ -31,9 +43,20 @@ exports.getMyMessages = async (req, res) => {
 // Suppression personnelle d'un message
 /**
  * Permet à l'utilisateur de supprimer un de ses messages.
- * @route DELETE /api/user/messages/:id
- * @param {string} id - Identifiant du message à supprimer
- * @returns {Object} Succès ou message d'erreur
+ *
+ * @function deleteMyMessage
+ * @memberof module:controllers/userController
+ * @param {Express.Request} req - Requête HTTP Express (params: id, utilisateur authentifié).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise<void>} Réponse JSON de succès ou message d'erreur.
+ *
+ * @throws {500} Si une erreur survient lors de la suppression.
+ *
+ * @example
+ * // Appel depuis une route Express
+ * router.delete('/user/messages/:id', deleteMyMessage);
+ *
+ * @see module:models/Message
  */
 exports.deleteMyMessage = async (req, res) => {
   try {
@@ -60,10 +83,21 @@ exports.deleteMyMessage = async (req, res) => {
 
 /**
  * Permet à l'utilisateur de répondre à l'admin.
- * @route POST /api/user/reply-admin
- * @param {string} subject - Sujet du message
- * @param {string} body - Contenu du message
- * @returns {Object} Succès ou message d'erreur
+ *
+ * @function replyToAdmin
+ * @memberof module:controllers/userController
+ * @param {Express.Request} req - Requête HTTP Express (body: subject, body, utilisateur authentifié).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise<void>} Réponse JSON de succès ou message d'erreur.
+ *
+ * @throws {500} Si une erreur survient lors de l'envoi du message.
+ *
+ * @example
+ * // Appel depuis une route Express
+ * router.post('/user/reply-admin', replyToAdmin);
+ *
+ * @see module:models/Message
+ * @see module:models/User
  */
 exports.replyToAdmin = async (req, res) => {
   try {

@@ -12,13 +12,21 @@ const jwt = require('jsonwebtoken');
 
 /**
  * Inscrit un nouvel utilisateur.
- * @route POST /api/auth/register
- * @param {string} nom - Nom de l'utilisateur
- * @param {string} email - Email de l'utilisateur
- * @param {string} mot_de_passe - Mot de passe
- * @param {string} telephone - Numéro de téléphone
- * @param {string} type - Type d'utilisateur (admin, client, etc.)
- * @returns {Object} Message de succès ou d'erreur
+ *
+ * @function register
+ * @memberof module:controllers/authController
+ * @param {Express.Request} req - Requête HTTP Express (body: nom, email, mot_de_passe, telephone, type).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise<void>} Réponse JSON avec message de succès ou d'erreur.
+ *
+ * @throws {400} Si l'email est déjà utilisé.
+ * @throws {500} Si une erreur survient lors de l'inscription.
+ *
+ * @example
+ * // Appel depuis une route Express
+ * router.post('/auth/register', register);
+ *
+ * @see module:models/User
  */
 exports.register = async (req, res) => {
   try {
@@ -48,10 +56,21 @@ exports.register = async (req, res) => {
 
 /**
  * Connecte un utilisateur existant.
- * @route POST /api/auth/login
- * @param {string} email - Email de l'utilisateur
- * @param {string} mot_de_passe - Mot de passe
- * @returns {Object} Token JWT et informations utilisateur ou message d'erreur
+ *
+ * @function login
+ * @memberof module:controllers/authController
+ * @param {Express.Request} req - Requête HTTP Express (body: email, mot_de_passe).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise<void>} Réponse JSON avec token JWT et infos utilisateur ou message d'erreur.
+ *
+ * @throws {400} Si email ou mot de passe incorrect.
+ * @throws {500} Si une erreur survient lors de la connexion.
+ *
+ * @example
+ * // Appel depuis une route Express
+ * router.post('/auth/login', login);
+ *
+ * @see module:models/User
  */
 exports.login = async (req, res) => {
   console.log('--- Tentative de connexion ---');

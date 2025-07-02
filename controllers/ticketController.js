@@ -13,12 +13,24 @@ const Reservation = require('../models/Reservation');
  */
 
 /**
- * @brief Récupère le ticket associé à une réservation pour l'utilisateur connecté.
- * @param {Object} req Requête HTTP Express (params: reservationId).
- * @param {Object} res Réponse HTTP Express.
- * @returns {void}
+ * Récupère le ticket associé à une réservation pour l'utilisateur connecté.
+ *
+ * @function getTicketByReservationId
+ * @memberof module:controllers/ticketController
+ * @param {Express.Request} req - Requête HTTP Express (params: reservationId, utilisateur authentifié).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise<void>} Réponse JSON contenant le ticket ou un message d'erreur.
+ *
+ * @throws {404} Si la réservation n'est pas trouvée ou non autorisée.
+ * @throws {404} Si le ticket n'est pas trouvé.
+ * @throws {500} Si une erreur survient lors de la récupération.
+ *
  * @example
- * getTicketByReservationId(req, res);
+ * // Appel depuis une route Express
+ * router.get('/ticket/:reservationId', getTicketByReservationId);
+ *
+ * @see module:models/Ticket
+ * @see module:models/Reservation
  */
 exports.getTicketByReservationId = async (req, res) => {
   try {
@@ -59,12 +71,21 @@ exports.getTicketByReservationId = async (req, res) => {
 };
 
 /**
- * @brief Récupère la liste des sièges réservés pour un horaire donné.
- * @param {Object} req Requête HTTP Express (params: scheduleId).
- * @param {Object} res Réponse HTTP Express.
- * @returns {void}
+ * Récupère la liste des sièges réservés pour un horaire donné.
+ *
+ * @function getReservedSeats
+ * @memberof module:controllers/ticketController
+ * @param {Express.Request} req - Requête HTTP Express (params: scheduleId).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise<void>} Réponse JSON contenant la liste des sièges réservés ou un message d'erreur.
+ *
+ * @throws {500} Si une erreur survient lors de la récupération.
+ *
  * @example
- * getReservedSeats(req, res);
+ * // Appel depuis une route Express
+ * router.get('/reserved-seats/:scheduleId', getReservedSeats);
+ *
+ * @see module:models/Ticket
  */
 exports.getReservedSeats = async (req, res) => {
   try {

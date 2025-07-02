@@ -144,7 +144,7 @@
     
 
     
-    <h4 class="name" id=".login"><span class="type-signature">(static) </span>login<span class="signature">(email, mot_de_passe)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id=".login"><span class="type-signature">(static) </span>login<span class="signature">(req, res)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></h4>
     
 
     
@@ -188,13 +188,13 @@
 
         <tr>
             
-                <td class="name"><code>email</code></td>
+                <td class="name"><code>req</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">Express.Request</span>
 
 
             
@@ -204,20 +204,20 @@
 
             
 
-            <td class="description last">Email de l'utilisateur</td>
+            <td class="description last">Requête HTTP Express (body: email, mot_de_passe).</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>mot_de_passe</code></td>
+                <td class="name"><code>res</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">Express.Response</span>
 
 
             
@@ -227,7 +227,7 @@
 
             
 
-            <td class="description last">Mot de passe</td>
+            <td class="description last">Réponse HTTP Express.</td>
         </tr>
 
     
@@ -268,12 +268,19 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controllers_authController.js.html">controllers/authController.js</a>, <a href="controllers_authController.js.html#line56">line 56</a>
+        <a href="controllers_authController.js.html">controllers/authController.js</a>, <a href="controllers_authController.js.html#line57">line 57</a>
     </li></ul></dd>
     
 
     
 
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>module:models/User</li>
+        </ul>
+    </dd>
     
 
     
@@ -291,13 +298,69 @@
 
 
 
+<h5>Throws:</h5>
+<ul>
+        <li>
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        Si email ou mot de passe incorrect.
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">400</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+</li>
+    
+        <li>
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        Si une erreur survient lors de la connexion.
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">500</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+</li>
+    </ul>
 
 
 <h5>Returns:</h5>
 
         
 <div class="param-desc">
-    Token JWT et informations utilisateur ou message d'erreur
+    Réponse JSON avec token JWT et infos utilisateur ou message d'erreur.
 </div>
 
 
@@ -308,7 +371,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Object</span>
+<span class="param-type">Promise.&lt;void></span>
 
 
     </dd>
@@ -319,6 +382,12 @@
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Appel depuis une route Express
+router.post('/auth/login', login);</code></pre>
+
+
 
         
             
@@ -326,7 +395,7 @@
     
 
     
-    <h4 class="name" id=".register"><span class="type-signature">(static) </span>register<span class="signature">(nom, email, mot_de_passe, telephone, type)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id=".register"><span class="type-signature">(static) </span>register<span class="signature">(req, res)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></h4>
     
 
     
@@ -370,13 +439,13 @@
 
         <tr>
             
-                <td class="name"><code>nom</code></td>
+                <td class="name"><code>req</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">Express.Request</span>
 
 
             
@@ -386,20 +455,20 @@
 
             
 
-            <td class="description last">Nom de l'utilisateur</td>
+            <td class="description last">Requête HTTP Express (body: nom, email, mot_de_passe, telephone, type).</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>email</code></td>
+                <td class="name"><code>res</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">Express.Response</span>
 
 
             
@@ -409,76 +478,7 @@
 
             
 
-            <td class="description last">Email de l'utilisateur</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>mot_de_passe</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Mot de passe</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>telephone</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Numéro de téléphone</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>type</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Type d'utilisateur (admin, client, etc.)</td>
+            <td class="description last">Réponse HTTP Express.</td>
         </tr>
 
     
@@ -519,7 +519,235 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controllers_authController.js.html">controllers/authController.js</a>, <a href="controllers_authController.js.html#line23">line 23</a>
+        <a href="controllers_authController.js.html">controllers/authController.js</a>, <a href="controllers_authController.js.html#line13">line 13</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>module:models/User</li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Throws:</h5>
+<ul>
+        <li>
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        Si l'email est déjà utilisé.
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">400</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+</li>
+    
+        <li>
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        Si une erreur survient lors de l'inscription.
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">500</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+</li>
+    </ul>
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Réponse JSON avec message de succès ou d'erreur.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;void></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Appel depuis une route Express
+router.post('/auth/register', register);</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".requestResetOtp"><span class="type-signature">(static) </span>requestResetOtp<span class="signature">(email)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Demande l'envoi d'un OTP pour la réinitialisation du mot de passe.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>email</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Email pour lequel envoyer l'OTP</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_authController.js.html">controllers/authController.js</a>, <a href="controllers_authController.js.html#line222">line 222</a>
     </li></ul></dd>
     
 
@@ -678,7 +906,212 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controllers_authController.js.html">controllers/authController.js</a>, <a href="controllers_authController.js.html#line144">line 144</a>
+        <a href="controllers_authController.js.html">controllers/authController.js</a>, <a href="controllers_authController.js.html#line162">line 162</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Message de succès ou d'erreur
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".resetPassword"><span class="type-signature">(static) </span>resetPassword<span class="signature">(email, otp, newPassword)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Réinitialise le mot de passe après vérification de l'OTP.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>email</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Email à vérifier</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>otp</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Code OTP reçu</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>newPassword</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Nouveau mot de passe</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_authController.js.html">controllers/authController.js</a>, <a href="controllers_authController.js.html#line254">line 254</a>
     </li></ul></dd>
     
 
@@ -906,7 +1339,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controllers_authController.js.html">controllers/authController.js</a>, <a href="controllers_authController.js.html#line118">line 118</a>
+        <a href="controllers_authController.js.html">controllers/authController.js</a>, <a href="controllers_authController.js.html#line136">line 136</a>
     </li></ul></dd>
     
 
@@ -1157,7 +1590,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controllers_authController.js.html">controllers/authController.js</a>, <a href="controllers_authController.js.html#line175">line 175</a>
+        <a href="controllers_authController.js.html">controllers/authController.js</a>, <a href="controllers_authController.js.html#line193">line 193</a>
     </li></ul></dd>
     
 
@@ -1225,13 +1658,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-app.html">app</a></li><li><a href="module-controllers_adminController.html">controllers/adminController</a></li><li><a href="module-controllers_authController.html">controllers/authController</a></li><li><a href="module-controllers_busController.html">controllers/busController</a></li><li><a href="module-controllers_paymentController.html">controllers/paymentController</a></li><li><a href="module-controllers_reservationController.html">controllers/reservationController</a></li><li><a href="module-controllers_scheduleController.html">controllers/scheduleController</a></li><li><a href="module-controllers_terminalController.html">controllers/terminalController</a></li><li><a href="module-controllers_ticketController.html">controllers/ticketController</a></li><li><a href="module-controllers_userController.html">controllers/userController</a></li><li><a href="module-server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#adminMiddleware">adminMiddleware</a></li><li><a href="global.html#authMiddleware">authMiddleware</a></li><li><a href="global.html#connectDB">connectDB</a></li><li><a href="global.html#createAdminUser">createAdminUser</a></li><li><a href="global.html#sendOtpMail">sendOtpMail</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-app.html">app</a></li><li><a href="module-controllers_adminController.html">controllers/adminController</a></li><li><a href="module-controllers_authController.html">controllers/authController</a></li><li><a href="module-controllers_busController.html">controllers/busController</a></li><li><a href="module-controllers_paymentController.html">controllers/paymentController</a></li><li><a href="module-controllers_reservationController.html">controllers/reservationController</a></li><li><a href="module-controllers_scheduleController.html">controllers/scheduleController</a></li><li><a href="module-controllers_terminalController.html">controllers/terminalController</a></li><li><a href="module-controllers_ticketController.html">controllers/ticketController</a></li><li><a href="module-controllers_userController.html">controllers/userController</a></li><li><a href="module-server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#connectDB">connectDB</a></li><li><a href="global.html#createAdminUser">createAdminUser</a></li><li><a href="global.html#sendOtpMail">sendOtpMail</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Jun 27 2025 13:10:21 GMT+0100 (heure normale d’Afrique de l’Ouest)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Jul 02 2025 21:03:19 GMT+0100 (heure normale d’Afrique de l’Ouest)
 </footer>
 
 <script> prettyPrint(); </script>

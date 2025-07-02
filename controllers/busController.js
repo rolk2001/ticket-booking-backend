@@ -12,14 +12,22 @@
 const Bus = require('../models/Bus');
 
 /**
- * @brief Ajoute un nouveau bus.
- * @route POST /api/bus
- * @param {string} numero - Numéro du bus
- * @param {number} capacite - Capacité du bus
- * @param {string} compagnie - Compagnie du bus
- * @param {string} type_bus - Type de bus
- * @param {string} status - Statut du bus (optionnel)
- * @returns {Object} Message de succès ou d'erreur
+ * Ajoute un nouveau bus.
+ *
+ * @function ajouterBus
+ * @memberof module:controllers/busController
+ * @param {Express.Request} req - Requête HTTP Express (body: numero, capacite, compagnie, type_bus, status).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise<void>} Réponse JSON avec message de succès ou d'erreur.
+ *
+ * @throws {400} Si un champ obligatoire est manquant.
+ * @throws {500} Si une erreur survient lors de l'ajout.
+ *
+ * @example
+ * // Appel depuis une route Express
+ * router.post('/bus', ajouterBus);
+ *
+ * @see module:models/Bus
  */
 exports.ajouterBus = async (req, res) => {
   try {
@@ -36,10 +44,22 @@ exports.ajouterBus = async (req, res) => {
 };
 
 /**
- * @brief Modifie un bus existant.
- * @route PUT /api/bus/:id
- * @param {string} id - Identifiant du bus à modifier
- * @returns {Object} Message de succès ou d'erreur
+ * Modifie un bus existant.
+ *
+ * @function modifierBus
+ * @memberof module:controllers/busController
+ * @param {Express.Request} req - Requête HTTP Express (params: id, body: champs à modifier).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise<void>} Réponse JSON avec message de succès ou d'erreur.
+ *
+ * @throws {404} Si le bus n'est pas trouvé.
+ * @throws {500} Si une erreur survient lors de la modification.
+ *
+ * @example
+ * // Appel depuis une route Express
+ * router.put('/bus/:id', modifierBus);
+ *
+ * @see module:models/Bus
  */
 exports.modifierBus = async (req, res) => {
   try {
@@ -53,9 +73,21 @@ exports.modifierBus = async (req, res) => {
 };
 
 /**
- * @brief Liste tous les bus.
- * @route GET /api/bus
- * @returns {Array} Liste des bus
+ * Liste tous les bus.
+ *
+ * @function listerBus
+ * @memberof module:controllers/busController
+ * @param {Express.Request} req - Requête HTTP Express.
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise<void>} Réponse JSON contenant la liste des bus ou un message d'erreur.
+ *
+ * @throws {500} Si une erreur survient lors de la récupération.
+ *
+ * @example
+ * // Appel depuis une route Express
+ * router.get('/bus', listerBus);
+ *
+ * @see module:models/Bus
  */
 exports.listerBus = async (req, res) => {
   try {

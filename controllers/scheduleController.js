@@ -13,12 +13,24 @@ const Schedule = require('../models/Schedule');
 const Bus = require('../models/Bus');
 
 /**
- * @brief Crée un nouvel horaire pour un bus donné.
- * @param {Object} req Requête HTTP Express contenant les infos d'horaire.
- * @param {Object} res Réponse HTTP Express.
- * @returns {void}
+ * Crée un nouvel horaire pour un bus donné.
+ *
+ * @function creerHoraire
+ * @memberof module:controllers/scheduleController
+ * @param {Express.Request} req - Requête HTTP Express (body: bus_id, origine, destination, heure_depart, heure_arrivee, prix).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise<void>} Réponse JSON avec l'horaire créé ou un message d'erreur.
+ *
+ * @throws {404} Si le bus n'est pas trouvé.
+ * @throws {400} Si l'origine et la destination sont identiques.
+ * @throws {500} Si une erreur survient lors de la création.
+ *
  * @example
- * creerHoraire(req, res);
+ * // Appel depuis une route Express
+ * router.post('/horaires', creerHoraire);
+ *
+ * @see module:models/Schedule
+ * @see module:models/Bus
  */
 exports.creerHoraire = async (req, res) => {
   try {
@@ -49,12 +61,21 @@ exports.creerHoraire = async (req, res) => {
 };
 
 /**
- * @brief Liste tous les horaires, avec possibilité de filtrer par origine, destination et date.
- * @param {Object} req Requête HTTP Express (query: origine, destination, date).
- * @param {Object} res Réponse HTTP Express.
- * @returns {void}
+ * Liste tous les horaires, avec possibilité de filtrer par origine, destination et date.
+ *
+ * @function listerHoraires
+ * @memberof module:controllers/scheduleController
+ * @param {Express.Request} req - Requête HTTP Express (query: origine, destination, date).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise<void>} Réponse JSON contenant la liste des horaires ou un message d'erreur.
+ *
+ * @throws {500} Si une erreur survient lors de la récupération.
+ *
  * @example
- * listerHoraires(req, res);
+ * // Appel depuis une route Express
+ * router.get('/horaires', listerHoraires);
+ *
+ * @see module:models/Schedule
  */
 exports.listerHoraires = async (req, res) => {
   try {

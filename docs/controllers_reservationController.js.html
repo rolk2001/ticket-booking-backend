@@ -43,13 +43,34 @@ const Ticket = require('../models/Ticket');
 const QRCode = require('qrcode');
 
 /**
- * @brief Crée une nouvelle réservation et génère un ticket avec QR code.
- * @param {Object} req Requête HTTP Express (body: schedule, nombre_places, seat).
- * @param {Object} res Réponse HTTP Express.
- * @returns {void}
+ * Crée une nouvelle réservation et génère un ticket avec QR code.
+ *
+ * @function creerReservation
+ * @memberof module:controllers/reservationController
+ * @param {Express.Request} req - Requête HTTP Express (body: schedule, nombre_places, seat). L'utilisateur doit être authentifié (req.user.userId).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise&lt;void>} Réponse JSON contenant la réservation et le ticket généré, ou un message d'erreur.
+ *
+ * @throws {404} Si l'horaire n'est pas trouvé.
+ * @throws {400} Si pas assez de places disponibles.
+ * @throws {500} Si une erreur survient lors de la création.
+ *
  * @example
- * creerReservation(req, res);
+ * // Appel depuis une route Express
+ * router.post('/reservation', creerReservation);
+ *
+ * @see module:models/Reservation
+ * @see module:models/Ticket
+ * @see module:models/Schedule
+ * @see module:models/User
+ * @see module:models/Message
+ * @see module:utils/sendOtpMail
  */
+
+const Message = require('../models/Message');
+const User = require('../models/User');
+const sendMail = require('../utils/sendOtpMail');
+
 exports.creerReservation = async (req, res) => {
   try {
     const { schedule: scheduleId, nombre_places, seat } = req.body;
@@ -73,9 +94,23 @@ exports.creerReservation = async (req, res) => {
     });
     await reservation.save();
 
-    // Générer le QR code avec le nom de la compagnie
-    const compagnie = schedule.bus?.compagnie || 'COMPAGNIE';
-    const qrText = `${compagnie}.cm`;
+
+    // Récupérer l'utilisateur pour le QR code
+    const user = await User.findById(userId);
+    // Date de paiement = date de création du ticket (sera créée juste après)
+    // Date de départ = schedule.date_depart
+    // Numéro de siège = seat
+    // Email = user.email
+    // Nom = user.nom
+    // On prépare un objet JSON pour le QR code
+    const qrPayload = {
+      nom: user?.nom || '',
+      email: user?.email || '',
+      siege: seat || 'Non assigné',
+      datePaiement: new Date().toISOString(),
+      dateDepart: schedule.date_depart ? new Date(schedule.date_depart).toISOString() : '',
+    };
+    const qrText = JSON.stringify(qrPayload);
     const qr_code = await QRCode.toDataURL(qrText);
 
     // Créer le ticket avec le QR code
@@ -91,6 +126,23 @@ exports.creerReservation = async (req, res) => {
     schedule.places_disponibles -= nombre_places;
     await schedule.save();
 
+    // --- ENVOI MESSAGE AUTOMATIQUE ---
+    if (user) {
+      const subject = "Confirmation de réservation";
+      const bodyText = `Bonjour ${user.nom || ''},\n\nVotre réservation a bien été prise en compte. Merci de procéder au paiement dans les 30 minutes, sans quoi elle sera annulée automatiquement.\n\nCordialement,\nL’équipe Ticket Bus CM`;
+      const bodyHtml = bodyText.replace(/\n/g, '&lt;br>');
+      // Message interne
+      const message = new Message({
+        to: [userId],
+        from: null,
+        subject,
+        body: bodyText,
+      });
+      await message.save();
+      // Email
+      await sendMail(user.email, subject, bodyHtml);
+    }
+
     res.status(201).json({ message: "Réservation créée avec succès", reservation, ticket });
   } catch (error) {
     res.status(500).json({ message: "Erreur lors de la création de la réservation.", error: error.message });
@@ -98,12 +150,21 @@ exports.creerReservation = async (req, res) => {
 };
 
 /**
- * @brief Récupère les réservations de l'utilisateur connecté.
- * @param {Object} req Requête HTTP Express.
- * @param {Object} res Réponse HTTP Express.
- * @returns {void}
+ * Récupère les réservations de l'utilisateur connecté.
+ *
+ * @function mesReservations
+ * @memberof module:controllers/reservationController
+ * @param {Express.Request} req - Requête HTTP Express (utilisateur authentifié).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise&lt;void>} Réponse JSON contenant la liste des réservations ou un message d'erreur.
+ *
+ * @throws {500} Si une erreur survient lors de la récupération.
+ *
  * @example
- * mesReservations(req, res);
+ * // Appel depuis une route Express
+ * router.get('/mes-reservations', mesReservations);
+ *
+ * @see module:models/Reservation
  */
 exports.mesReservations = async (req, res) => {
   try {
@@ -126,12 +187,21 @@ exports.mesReservations = async (req, res) => {
 };
 
 /**
- * @brief Récupère la liste des sièges réservés pour un horaire donné.
- * @param {Object} req Requête HTTP Express (params: scheduleId).
- * @param {Object} res Réponse HTTP Express.
- * @returns {void}
+ * Récupère la liste des sièges réservés pour un horaire donné.
+ *
+ * @function getReservedSeats
+ * @memberof module:controllers/reservationController
+ * @param {Express.Request} req - Requête HTTP Express (params: scheduleId).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise&lt;void>} Réponse JSON contenant la liste des sièges réservés ou un message d'erreur.
+ *
+ * @throws {500} Si une erreur survient lors de la récupération.
+ *
  * @example
- * getReservedSeats(req, res);
+ * // Appel depuis une route Express
+ * router.get('/reserved-seats/:scheduleId', getReservedSeats);
+ *
+ * @see module:models/Ticket
  */
 exports.getReservedSeats = async (req, res) => {
   try {
@@ -154,13 +224,13 @@ exports.getReservedSeats = async (req, res) => {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-app.html">app</a></li><li><a href="module-controllers_adminController.html">controllers/adminController</a></li><li><a href="module-controllers_authController.html">controllers/authController</a></li><li><a href="module-controllers_busController.html">controllers/busController</a></li><li><a href="module-controllers_paymentController.html">controllers/paymentController</a></li><li><a href="module-controllers_reservationController.html">controllers/reservationController</a></li><li><a href="module-controllers_scheduleController.html">controllers/scheduleController</a></li><li><a href="module-controllers_terminalController.html">controllers/terminalController</a></li><li><a href="module-controllers_ticketController.html">controllers/ticketController</a></li><li><a href="module-controllers_userController.html">controllers/userController</a></li><li><a href="module-server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#adminMiddleware">adminMiddleware</a></li><li><a href="global.html#authMiddleware">authMiddleware</a></li><li><a href="global.html#connectDB">connectDB</a></li><li><a href="global.html#createAdminUser">createAdminUser</a></li><li><a href="global.html#sendOtpMail">sendOtpMail</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-app.html">app</a></li><li><a href="module-controllers_adminController.html">controllers/adminController</a></li><li><a href="module-controllers_authController.html">controllers/authController</a></li><li><a href="module-controllers_busController.html">controllers/busController</a></li><li><a href="module-controllers_paymentController.html">controllers/paymentController</a></li><li><a href="module-controllers_reservationController.html">controllers/reservationController</a></li><li><a href="module-controllers_scheduleController.html">controllers/scheduleController</a></li><li><a href="module-controllers_terminalController.html">controllers/terminalController</a></li><li><a href="module-controllers_ticketController.html">controllers/ticketController</a></li><li><a href="module-controllers_userController.html">controllers/userController</a></li><li><a href="module-server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#connectDB">connectDB</a></li><li><a href="global.html#createAdminUser">createAdminUser</a></li><li><a href="global.html#sendOtpMail">sendOtpMail</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Jun 27 2025 13:10:21 GMT+0100 (heure normale d’Afrique de l’Ouest)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Jul 02 2025 21:03:19 GMT+0100 (heure normale d’Afrique de l’Ouest)
 </footer>
 
 <script> prettyPrint(); </script>

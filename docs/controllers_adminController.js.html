@@ -34,7 +34,7 @@ const Ticket = require('../models/Ticket');
 const Payment = require('../models/Payment');
 const User = require('../models/User');
 const Message = require('../models/Message');
-const sendOtpMail = require('../utils/sendOtpMail'); // réutilise ton utilitaire mail
+const sendMail = require('../utils/sendOtpMail'); 
 
 /**
  * @file adminController.js
@@ -50,8 +50,26 @@ const sendOtpMail = require('../utils/sendOtpMail'); // réutilise ton utilitair
 // ===== DASHBOARD STATISTIQUES =====
 /**
  * Récupère les statistiques du dashboard admin (bus, terminaux, réservations, revenus, etc.).
- * @route GET /api/admin/dashboard
- * @returns {Object} Statistiques et réservations récentes
+ *
+ * @function getDashboardStats
+ * @memberof module:controllers/adminController
+ * @param {Express.Request} req - Requête HTTP Express.
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise&lt;void>} Réponse JSON contenant les statistiques et réservations récentes ou un message d'erreur.
+ *
+ * @throws {500} Si une erreur survient lors de la récupération.
+ *
+ * @example
+ * // Appel depuis une route Express
+ * router.get('/admin/dashboard', getDashboardStats);
+ *
+ * @see module:models/Bus
+ * @see module:models/Terminal
+ * @see module:models/Schedule
+ * @see module:models/Reservation
+ * @see module:models/Ticket
+ * @see module:models/Payment
+ * @see module:models/User
  */
 const getDashboardStats = async (req, res) => {
   try {
@@ -96,8 +114,20 @@ const getDashboardStats = async (req, res) => {
 // ===== GESTION DES BUS =====
 /**
  * Liste tous les bus.
- * @route GET /api/admin/buses
- * @returns {Array} Liste des bus
+ *
+ * @function getAllBuses
+ * @memberof module:controllers/adminController
+ * @param {Express.Request} req - Requête HTTP Express.
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise&lt;void>} Réponse JSON contenant la liste des bus ou un message d'erreur.
+ *
+ * @throws {500} Si une erreur survient lors de la récupération.
+ *
+ * @example
+ * // Appel depuis une route Express
+ * router.get('/admin/buses', getAllBuses);
+ *
+ * @see module:models/Bus
  */
 const getAllBuses = async (req, res) => {
   try {
@@ -111,12 +141,20 @@ const getAllBuses = async (req, res) => {
 
 /**
  * Crée un nouveau bus.
- * @route POST /api/admin/buses
- * @param {string} numero - Numéro du bus
- * @param {number} capacite - Capacité du bus
- * @param {string} compagnie - Compagnie du bus
- * @param {string} type_bus - Type de bus
- * @returns {Object} Bus créé
+ *
+ * @function createBus
+ * @memberof module:controllers/adminController
+ * @param {Express.Request} req - Requête HTTP Express (body: numero, capacite, compagnie, type_bus).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise&lt;void>} Réponse JSON contenant le bus créé ou un message d'erreur.
+ *
+ * @throws {500} Si une erreur survient lors de la création.
+ *
+ * @example
+ * // Appel depuis une route Express
+ * router.post('/admin/buses', createBus);
+ *
+ * @see module:models/Bus
  */
 const createBus = async (req, res) => {
   try {
@@ -414,17 +452,36 @@ const updateReservationStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { statut } = req.body;
-    
+
     const reservation = await Reservation.findByIdAndUpdate(
-      id, 
-      { statut }, 
+      id,
+      { statut },
       { new: true }
     ).populate('user schedule');
-    
+
     if (!reservation) {
       return res.status(404).json({ message: 'Réservation non trouvée' });
     }
-    
+
+    // === Création automatique du Payment si statut devient "confirmée" ===
+    if (statut === 'confirmée') {
+      const existingPayment = await Payment.findOne({ reservation_id: reservation._id });
+      if (!existingPayment) {
+        // On peut adapter le montant selon la logique métier (ici prix du schedule * nombre_places)
+        let montant = 0;
+        if (reservation.schedule &amp;&amp; reservation.schedule.prix &amp;&amp; reservation.nombre_places) {
+          montant = reservation.schedule.prix * reservation.nombre_places;
+        }
+        const payment = new Payment({
+          reservation_id: reservation._id,
+          montant,
+          moyen: 'Test', // À adapter si besoin
+          status: 'succès',
+        });
+        await payment.save();
+      }
+    }
+
     res.json(reservation);
   } catch (error) {
     console.error('Erreur updateReservationStatus:', error);
@@ -582,12 +639,12 @@ const sendMessage = async (req, res) => {
     // Envoi d'e-mail à chaque destinataire
     const users = await User.find({ _id: { $in: to } });
     for (const user of users) {
-      await sendOtpMail(user.email, `${subject}\n\n${body}`);
+      await sendMail(user.email, subject, `&lt;p>${body}&lt;/p>`);
     }
 
     res.status(201).json({ message: 'Message envoyé et enregistré.' });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de l\'envoi du message.' });
+    res.status(500).json({ message: "Erreur lors de l'envoi du message." });
   }
 };
 
@@ -680,13 +737,13 @@ module.exports = {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-app.html">app</a></li><li><a href="module-controllers_adminController.html">controllers/adminController</a></li><li><a href="module-controllers_authController.html">controllers/authController</a></li><li><a href="module-controllers_busController.html">controllers/busController</a></li><li><a href="module-controllers_paymentController.html">controllers/paymentController</a></li><li><a href="module-controllers_reservationController.html">controllers/reservationController</a></li><li><a href="module-controllers_scheduleController.html">controllers/scheduleController</a></li><li><a href="module-controllers_terminalController.html">controllers/terminalController</a></li><li><a href="module-controllers_ticketController.html">controllers/ticketController</a></li><li><a href="module-controllers_userController.html">controllers/userController</a></li><li><a href="module-server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#adminMiddleware">adminMiddleware</a></li><li><a href="global.html#authMiddleware">authMiddleware</a></li><li><a href="global.html#connectDB">connectDB</a></li><li><a href="global.html#createAdminUser">createAdminUser</a></li><li><a href="global.html#sendOtpMail">sendOtpMail</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-app.html">app</a></li><li><a href="module-controllers_adminController.html">controllers/adminController</a></li><li><a href="module-controllers_authController.html">controllers/authController</a></li><li><a href="module-controllers_busController.html">controllers/busController</a></li><li><a href="module-controllers_paymentController.html">controllers/paymentController</a></li><li><a href="module-controllers_reservationController.html">controllers/reservationController</a></li><li><a href="module-controllers_scheduleController.html">controllers/scheduleController</a></li><li><a href="module-controllers_terminalController.html">controllers/terminalController</a></li><li><a href="module-controllers_ticketController.html">controllers/ticketController</a></li><li><a href="module-controllers_userController.html">controllers/userController</a></li><li><a href="module-server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#connectDB">connectDB</a></li><li><a href="global.html#createAdminUser">createAdminUser</a></li><li><a href="global.html#sendOtpMail">sendOtpMail</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Jun 27 2025 13:10:21 GMT+0100 (heure normale d’Afrique de l’Ouest)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Jul 02 2025 21:03:19 GMT+0100 (heure normale d’Afrique de l’Ouest)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -34,19 +34,27 @@
 // controllers/authController.js
 const User = require('../models/User');
 const EmailVerification = require('../models/EmailVerification');
-const sendOtpMail = require('../utils/sendOtpMail');
+const sendMail = require('../utils/sendOtpMail');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 /**
  * Inscrit un nouvel utilisateur.
- * @route POST /api/auth/register
- * @param {string} nom - Nom de l'utilisateur
- * @param {string} email - Email de l'utilisateur
- * @param {string} mot_de_passe - Mot de passe
- * @param {string} telephone - Numéro de téléphone
- * @param {string} type - Type d'utilisateur (admin, client, etc.)
- * @returns {Object} Message de succès ou d'erreur
+ *
+ * @function register
+ * @memberof module:controllers/authController
+ * @param {Express.Request} req - Requête HTTP Express (body: nom, email, mot_de_passe, telephone, type).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise&lt;void>} Réponse JSON avec message de succès ou d'erreur.
+ *
+ * @throws {400} Si l'email est déjà utilisé.
+ * @throws {500} Si une erreur survient lors de l'inscription.
+ *
+ * @example
+ * // Appel depuis une route Express
+ * router.post('/auth/register', register);
+ *
+ * @see module:models/User
  */
 exports.register = async (req, res) => {
   try {
@@ -76,14 +84,24 @@ exports.register = async (req, res) => {
 
 /**
  * Connecte un utilisateur existant.
- * @route POST /api/auth/login
- * @param {string} email - Email de l'utilisateur
- * @param {string} mot_de_passe - Mot de passe
- * @returns {Object} Token JWT et informations utilisateur ou message d'erreur
+ *
+ * @function login
+ * @memberof module:controllers/authController
+ * @param {Express.Request} req - Requête HTTP Express (body: email, mot_de_passe).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise&lt;void>} Réponse JSON avec token JWT et infos utilisateur ou message d'erreur.
+ *
+ * @throws {400} Si email ou mot de passe incorrect.
+ * @throws {500} Si une erreur survient lors de la connexion.
+ *
+ * @example
+ * // Appel depuis une route Express
+ * router.post('/auth/login', login);
+ *
+ * @see module:models/User
  */
 exports.login = async (req, res) => {
   console.log('--- Tentative de connexion ---');
-  console.log('Body reçu:', req.body);
   try {
     const { email, mot_de_passe } = req.body;
     
@@ -185,7 +203,7 @@ exports.requestSignupOtp = async (req, res) => {
     { upsert: true, new: true }
   );
 
-  await sendOtpMail(email, otp);
+  await sendMail(email, "Votre code de vérification", `&lt;p>Votre code de vérification est : &lt;b>${otp}&lt;/b>&lt;/p>`);
 
   res.json({ message: "Code envoyé à votre e-mail." });
 };
@@ -221,6 +239,69 @@ exports.verifyOtpAndRegister = async (req, res) => {
   await EmailVerification.deleteOne({ email });
 
   res.json({ message: "Inscription réussie !" });
+};
+
+/**
+ * Demande l'envoi d'un OTP pour la réinitialisation du mot de passe.
+ * @route POST /api/auth/request-reset-otp
+ * @param {string} email - Email pour lequel envoyer l'OTP
+ * @returns {Object} Message de succès ou d'erreur
+ */
+exports.requestResetOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "Aucun compte n'est associé à cet email." });
+    }
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+
+    await EmailVerification.findOneAndUpdate(
+      { email },
+      { otp, expiresAt },
+      { upsert: true, new: true }
+    );
+
+    await sendMail(email, "Votre code de vérification", `&lt;p>Votre code de vérification est : &lt;b>${otp}&lt;/b>&lt;/p>`);
+
+    res.json({ message: "Code OTP envoyé à votre e-mail." });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur lors de l'envoi de l'OTP.", error: error.message });
+  }
+};
+
+/**
+ * Réinitialise le mot de passe après vérification de l'OTP.
+ * @route POST /api/auth/reset-password
+ * @param {string} email - Email à vérifier
+ * @param {string} otp - Code OTP reçu
+ * @param {string} newPassword - Nouveau mot de passe
+ * @returns {Object} Message de succès ou d'erreur
+ */
+exports.resetPassword = async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+    const record = await EmailVerification.findOne({ email });
+
+    if (!record || record.otp !== otp || record.expiresAt &lt; new Date()) {
+      return res.status(400).json({ message: "Code OTP invalide ou expiré." });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé." });
+    }
+
+    user.mot_de_passe = await bcrypt.hash(newPassword, 10);
+    await user.save();
+
+    await EmailVerification.deleteOne({ email });
+
+    res.json({ message: "Mot de passe réinitialisé avec succès !" });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur lors de la réinitialisation.", error: error.message });
+  }
 };</code></pre>
         </article>
     </section>
@@ -231,13 +312,13 @@ exports.verifyOtpAndRegister = async (req, res) => {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-app.html">app</a></li><li><a href="module-controllers_adminController.html">controllers/adminController</a></li><li><a href="module-controllers_authController.html">controllers/authController</a></li><li><a href="module-controllers_busController.html">controllers/busController</a></li><li><a href="module-controllers_paymentController.html">controllers/paymentController</a></li><li><a href="module-controllers_reservationController.html">controllers/reservationController</a></li><li><a href="module-controllers_scheduleController.html">controllers/scheduleController</a></li><li><a href="module-controllers_terminalController.html">controllers/terminalController</a></li><li><a href="module-controllers_ticketController.html">controllers/ticketController</a></li><li><a href="module-controllers_userController.html">controllers/userController</a></li><li><a href="module-server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#adminMiddleware">adminMiddleware</a></li><li><a href="global.html#authMiddleware">authMiddleware</a></li><li><a href="global.html#connectDB">connectDB</a></li><li><a href="global.html#createAdminUser">createAdminUser</a></li><li><a href="global.html#sendOtpMail">sendOtpMail</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-app.html">app</a></li><li><a href="module-controllers_adminController.html">controllers/adminController</a></li><li><a href="module-controllers_authController.html">controllers/authController</a></li><li><a href="module-controllers_busController.html">controllers/busController</a></li><li><a href="module-controllers_paymentController.html">controllers/paymentController</a></li><li><a href="module-controllers_reservationController.html">controllers/reservationController</a></li><li><a href="module-controllers_scheduleController.html">controllers/scheduleController</a></li><li><a href="module-controllers_terminalController.html">controllers/terminalController</a></li><li><a href="module-controllers_ticketController.html">controllers/ticketController</a></li><li><a href="module-controllers_userController.html">controllers/userController</a></li><li><a href="module-server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#connectDB">connectDB</a></li><li><a href="global.html#createAdminUser">createAdminUser</a></li><li><a href="global.html#sendOtpMail">sendOtpMail</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Jun 27 2025 13:10:21 GMT+0100 (heure normale d’Afrique de l’Ouest)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Jul 02 2025 21:03:19 GMT+0100 (heure normale d’Afrique de l’Ouest)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -154,12 +154,16 @@
     
 
     
-    <h4 class="name" id=".getReservedSeats"><span class="type-signature">(static) </span>getReservedSeats<span class="signature">(req, res)</span><span class="type-signature"> &rarr; {void}</span></h4>
+    <h4 class="name" id=".getReservedSeats"><span class="type-signature">(static) </span>getReservedSeats<span class="signature">(req, res)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></h4>
     
 
     
 
 
+
+<div class="description">
+    Récupère la liste des sièges réservés pour un horaire donné.
+</div>
 
 
 
@@ -200,7 +204,7 @@
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">Express.Request</span>
 
 
             
@@ -223,7 +227,7 @@
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">Express.Response</span>
 
 
             
@@ -274,12 +278,19 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controllers_ticketController.js.html">controllers/ticketController.js</a>, <a href="controllers_ticketController.js.html#line69">line 69</a>
+        <a href="controllers_ticketController.js.html">controllers/ticketController.js</a>, <a href="controllers_ticketController.js.html#line73">line 73</a>
     </li></ul></dd>
     
 
     
 
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>module:models/Ticket</li>
+        </ul>
+    </dd>
     
 
     
@@ -297,11 +308,44 @@
 
 
 
+<h5>Throws:</h5>
+
+        
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        Si une erreur survient lors de la récupération.
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">500</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+
+    
 
 
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    Réponse JSON contenant la liste des sièges réservés ou un message d'erreur.
+</div>
+
 
 
 <dl>
@@ -310,7 +354,7 @@
     </dt>
     <dd>
         
-<span class="param-type">void</span>
+<span class="param-type">Promise.&lt;void></span>
 
 
     </dd>
@@ -323,7 +367,8 @@
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>getReservedSeats(req, res);</code></pre>
+    <pre class="prettyprint"><code>// Appel depuis une route Express
+router.get('/reserved-seats/:scheduleId', getReservedSeats);</code></pre>
 
 
 
@@ -333,12 +378,16 @@
     
 
     
-    <h4 class="name" id=".getTicketByReservationId"><span class="type-signature">(static) </span>getTicketByReservationId<span class="signature">(req, res)</span><span class="type-signature"> &rarr; {void}</span></h4>
+    <h4 class="name" id=".getTicketByReservationId"><span class="type-signature">(static) </span>getTicketByReservationId<span class="signature">(req, res)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></h4>
     
 
     
 
 
+
+<div class="description">
+    Récupère le ticket associé à une réservation pour l'utilisateur connecté.
+</div>
 
 
 
@@ -379,7 +428,7 @@
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">Express.Request</span>
 
 
             
@@ -389,7 +438,7 @@
 
             
 
-            <td class="description last">Requête HTTP Express (params: reservationId).</td>
+            <td class="description last">Requête HTTP Express (params: reservationId, utilisateur authentifié).</td>
         </tr>
 
     
@@ -402,7 +451,7 @@
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">Express.Response</span>
 
 
             
@@ -453,12 +502,21 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controllers_ticketController.js.html">controllers/ticketController.js</a>, <a href="controllers_ticketController.js.html#line23">line 23</a>
+        <a href="controllers_ticketController.js.html">controllers/ticketController.js</a>, <a href="controllers_ticketController.js.html#line15">line 15</a>
     </li></ul></dd>
     
 
     
 
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>module:models/Ticket</li>
+        
+            <li>module:models/Reservation</li>
+        </ul>
+    </dd>
     
 
     
@@ -476,11 +534,98 @@
 
 
 
+<h5>Throws:</h5>
+<ul>
+        <li>
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        Si la réservation n'est pas trouvée ou non autorisée.
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">404</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+</li>
+    
+        <li>
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        Si le ticket n'est pas trouvé.
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">404</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+</li>
+    
+        <li>
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        Si une erreur survient lors de la récupération.
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">500</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+</li>
+    </ul>
 
 
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    Réponse JSON contenant le ticket ou un message d'erreur.
+</div>
+
 
 
 <dl>
@@ -489,7 +634,7 @@
     </dt>
     <dd>
         
-<span class="param-type">void</span>
+<span class="param-type">Promise.&lt;void></span>
 
 
     </dd>
@@ -502,7 +647,8 @@
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>getTicketByReservationId(req, res);</code></pre>
+    <pre class="prettyprint"><code>// Appel depuis une route Express
+router.get('/ticket/:reservationId', getTicketByReservationId);</code></pre>
 
 
 
@@ -522,13 +668,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-app.html">app</a></li><li><a href="module-controllers_adminController.html">controllers/adminController</a></li><li><a href="module-controllers_authController.html">controllers/authController</a></li><li><a href="module-controllers_busController.html">controllers/busController</a></li><li><a href="module-controllers_paymentController.html">controllers/paymentController</a></li><li><a href="module-controllers_reservationController.html">controllers/reservationController</a></li><li><a href="module-controllers_scheduleController.html">controllers/scheduleController</a></li><li><a href="module-controllers_terminalController.html">controllers/terminalController</a></li><li><a href="module-controllers_ticketController.html">controllers/ticketController</a></li><li><a href="module-controllers_userController.html">controllers/userController</a></li><li><a href="module-server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#adminMiddleware">adminMiddleware</a></li><li><a href="global.html#authMiddleware">authMiddleware</a></li><li><a href="global.html#connectDB">connectDB</a></li><li><a href="global.html#createAdminUser">createAdminUser</a></li><li><a href="global.html#sendOtpMail">sendOtpMail</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-app.html">app</a></li><li><a href="module-controllers_adminController.html">controllers/adminController</a></li><li><a href="module-controllers_authController.html">controllers/authController</a></li><li><a href="module-controllers_busController.html">controllers/busController</a></li><li><a href="module-controllers_paymentController.html">controllers/paymentController</a></li><li><a href="module-controllers_reservationController.html">controllers/reservationController</a></li><li><a href="module-controllers_scheduleController.html">controllers/scheduleController</a></li><li><a href="module-controllers_terminalController.html">controllers/terminalController</a></li><li><a href="module-controllers_ticketController.html">controllers/ticketController</a></li><li><a href="module-controllers_userController.html">controllers/userController</a></li><li><a href="module-server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#connectDB">connectDB</a></li><li><a href="global.html#createAdminUser">createAdminUser</a></li><li><a href="global.html#sendOtpMail">sendOtpMail</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Jun 27 2025 13:10:21 GMT+0100 (heure normale d’Afrique de l’Ouest)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Jul 02 2025 21:03:19 GMT+0100 (heure normale d’Afrique de l’Ouest)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -12,11 +12,21 @@
 const Terminal = require('../models/Terminal');
 
 /**
- * @brief Ajoute un nouveau terminal.
- * @route POST /api/terminaux
- * @param {string} ville_destination - Ville de destination
- * @param {string} terminal_info - Informations sur le terminal
- * @returns {Object} Message de succès ou d'erreur
+ * Ajoute un nouveau terminal.
+ *
+ * @function ajouterTerminal
+ * @memberof module:controllers/terminalController
+ * @param {Express.Request} req - Requête HTTP Express (body: ville_destination, terminal_info).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise<void>} Réponse JSON avec message de succès ou d'erreur.
+ *
+ * @throws {500} Si une erreur survient lors de l'ajout.
+ *
+ * @example
+ * // Appel depuis une route Express
+ * router.post('/terminaux', ajouterTerminal);
+ *
+ * @see module:models/Terminal
  */
 exports.ajouterTerminal = async (req, res) => {
   try {
@@ -30,10 +40,22 @@ exports.ajouterTerminal = async (req, res) => {
 };
 
 /**
- * @brief Modifie un terminal existant.
- * @route PUT /api/terminaux/:id
- * @param {string} id - Identifiant du terminal à modifier
- * @returns {Object} Message de succès ou d'erreur
+ * Modifie un terminal existant.
+ *
+ * @function modifierTerminal
+ * @memberof module:controllers/terminalController
+ * @param {Express.Request} req - Requête HTTP Express (params: id, body: champs à modifier).
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise<void>} Réponse JSON avec message de succès ou d'erreur.
+ *
+ * @throws {404} Si le terminal n'est pas trouvé.
+ * @throws {500} Si une erreur survient lors de la modification.
+ *
+ * @example
+ * // Appel depuis une route Express
+ * router.put('/terminaux/:id', modifierTerminal);
+ *
+ * @see module:models/Terminal
  */
 exports.modifierTerminal = async (req, res) => {
   try {
@@ -47,9 +69,21 @@ exports.modifierTerminal = async (req, res) => {
 };
 
 /**
- * @brief Liste tous les terminaux.
- * @route GET /api/terminaux
- * @returns {Array} Liste des terminaux
+ * Liste tous les terminaux.
+ *
+ * @function listerTerminaux
+ * @memberof module:controllers/terminalController
+ * @param {Express.Request} req - Requête HTTP Express.
+ * @param {Express.Response} res - Réponse HTTP Express.
+ * @returns {Promise<void>} Réponse JSON contenant la liste des terminaux ou un message d'erreur.
+ *
+ * @throws {500} Si une erreur survient lors de la récupération.
+ *
+ * @example
+ * // Appel depuis une route Express
+ * router.get('/terminaux', listerTerminaux);
+ *
+ * @see module:models/Terminal
  */
 exports.listerTerminaux = async (req, res) => {
   try {
