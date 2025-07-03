@@ -83,11 +83,22 @@ connectDB().then(() => {
         // On suppose que le champ de date de départ est "heure_depart" ou "date_depart"
         const departDate = schedule.heure_depart || schedule.date_depart;
         if (!departDate) continue;
+        // Conversion explicite en heure du Cameroun (Africa/Douala)
         const departTime = new Date(departDate);
+        // Pour la comparaison, il faut que minDate et maxDate soient aussi "Cameroun" si besoin, mais ici on garde la logique existante
         if (departTime >= minDate && departTime <= maxDate) {
           // Message interne
           const subject = "Préparez-vous pour votre voyage !";
-          const bodyText = `Bonjour ${user.nom || ''},\n\nVotre bus partira à ${departTime.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' })}. Merci de vous préparer à l'avance et d'arriver au terminal à l'heure car le départ est dans 30 minutes.\n\nBon voyage !\nL'équipe Ticket Bus CM`;
+          // Affichage heure du Cameroun
+          const heureCameroun = departTime.toLocaleString('fr-FR', {
+            hour: '2-digit',
+            minute: '2-digit',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            timeZone: 'Africa/Douala'
+          });
+          const bodyText = `Bonjour ${user.nom || ''},\n\nVotre bus partira à ${heureCameroun}. Merci de vous préparer à l'avance et d'arriver au terminal à l'heure car le départ est dans 30 minutes.\n\nBon voyage !\nL'équipe Ticket Bus CM`;
           const bodyHtml = bodyText.replace(/\n/g, '<br>');
           const message = new Message({
             to: [user._id],
